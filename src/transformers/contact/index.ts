@@ -1,1 +1,1 @@
-export { translate as contactTranslate } from "./contact";
+export { translate as contactTranslate } from './contact'
