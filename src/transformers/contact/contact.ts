@@ -1,9 +1,11 @@
+export interface FluroContact {}
+
+export interface RockContact {}
+
 /**
  * Translates a fluro api contact object to a rock contact object
- * @param contact fluro api contact object
- * @returns rock contact object
  */
-export function translate(contact) {
+export function translate(contact: FluroContact): RockContact {
   return {
     id: contact.id,
     name: contact.name,
