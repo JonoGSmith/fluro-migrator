@@ -1,6 +1,6 @@
-export interface FluroContact {}
+export type FluroContact = {}
 
-export interface RockContact {}
+export type RockContact = {}
 
 /**
  * Translates a fluro api contact object to a rock contact object
