@@ -12,6 +12,6 @@ export function translate(contact: FluroContact): RockContact {
     email: contact.email,
     phone: contact.phone,
     created_at: contact.created_at,
-    updated_at: contact.updated_at,
-  };
+    updated_at: contact.updated_at
+  }
 }

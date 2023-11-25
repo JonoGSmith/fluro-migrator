@@ -1,2 +1,2 @@
-export { translate } from "./contact";
-export type { FluroContact, RockContact } from "./contact";
+export { translate } from './contact'
+export type { FluroContact, RockContact } from './contact'
