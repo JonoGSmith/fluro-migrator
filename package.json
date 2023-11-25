@@ -5,10 +5,10 @@
   "name": "fluro-migrator",
   "description": "A script to help us migrate our data from fluro to rockRMS",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "npx tsc src/index.ts"
+    "compile": "npx tsc index.ts"
   },
   "repository": {
     "type": "git",
