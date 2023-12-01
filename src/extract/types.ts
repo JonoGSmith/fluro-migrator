@@ -1,3 +1,5 @@
-export type ExtractFn<T = ExtractObject> = () => Promise<T[]>
+export interface ExtractObject {
+  id: string
+}
 
-export type ExtractObject = {}
+export type ExtractFn<T = ExtractObject> = () => Promise<T[]>

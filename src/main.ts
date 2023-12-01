@@ -5,24 +5,21 @@ import type { LoadFn } from './load/types'
 import { transform as transformContact } from './transform/contact'
 import type { TransformFn } from './transform/types'
 
+type ETLTuple = [ExtractFn, TransformFn, LoadFn]
+
 // define types of data
-const types: [ExtractFn, TransformFn, LoadFn][] = [
-  [extractContact, transformContact, loadContact]
-]
+const etl: ETLTuple[] = [[extractContact, transformContact, loadContact]]
 
 // loop through data types
 
 async function main() {
   await Promise.all(
-    types.map(async ([extract, transform, load]) => {
-      // import data
+    etl.map(async ([extract, transform, load]) => {
+      // extract data
       const data = await extract()
 
-      // transform data
-      const transformed = data.map(transform)
-
-      // export data
-      await load(transformed)
+      // transform and load data
+      await Promise.all(data.map((value) => load(transform(value))))
     })
   )
 }

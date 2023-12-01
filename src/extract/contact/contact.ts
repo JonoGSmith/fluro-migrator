@@ -1,5 +1,12 @@
-import { ExtractFn } from '../types'
+import { client } from '../client'
+import { ExtractFn, ExtractObject } from '../types'
 
-export type FluroContact = {}
+export interface FluroContact extends ExtractObject {
+  id: string
+}
 
-export const extract: ExtractFn<FluroContact> = () => {}
+export const extract: ExtractFn = async (): Promise<FluroContact[]> => {
+  const req = await client.get('/contact')
+
+  return req.data
+}
