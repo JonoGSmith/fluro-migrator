@@ -1,14 +1,17 @@
-import { FluroContact, RockContact, translate } from '.'
+import { transform } from '.'
+import { FluroContact } from '../../extract/contact'
+import { RockContact } from '../../load/contact'
 
 describe('contact', () => {
   describe('translate', () => {
     const fluroContact: FluroContact = {
-      id: 1,
-      name: 'Test Name'
+      id: '1'
     }
-    const rockContact: RockContact = {}
-    it('should translate a fluro api contact object to a rock contact object', () => {
-      expect(translate(fluroContact)).toEqual(rockContact)
+    const rockContact: RockContact = {
+      id: '1'
+    }
+    it('should translate a fluro api contact to a rock contact', () => {
+      expect(transform(fluroContact)).toEqual(rockContact)
     })
   })
 })
