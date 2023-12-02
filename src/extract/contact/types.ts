@@ -1,3 +1,5 @@
+import { Realm } from '../types'
+
 export interface FluroContact {
   _id: string
   owners: unknown[]
@@ -66,16 +68,6 @@ export interface FluroContact {
   dateOfBirth?: string
   maritalStatus?: string
   maidenName?: string
-}
-
-interface Realm {
-  _id: string
-  title: string
-  _type: string
-  bgColor: string
-  color: string
-  slug: string
-  definition: string
 }
 
 interface Tag {
