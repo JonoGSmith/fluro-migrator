@@ -1,21 +1,9 @@
 import 'dotenv/config'
-import { extract as extractContact } from './extract/contact'
-import type { ExtractFn } from './extract/types'
-import { load as loadContact } from './load/contact'
-import type { LoadFn } from './load/types'
-import { transform as transformContact } from './transform/contact'
-import type { TransformFn } from './transform/types'
-
-type ETLTuple = [ExtractFn, TransformFn, LoadFn]
-
-// define types of data
-const etl: ETLTuple[] = [[extractContact, transformContact, loadContact]]
-
-// loop through data types
+import { tuples } from './tuples'
 
 async function main() {
   await Promise.all(
-    etl.map(async ([extract, transform, load]) => {
+    tuples.map(async ([extract, transform, load]) => {
       // create extract iterator
       const iterator = await extract()
 

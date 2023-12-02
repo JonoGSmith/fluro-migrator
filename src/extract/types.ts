@@ -1,5 +1,3 @@
-export interface ExtractObject {
-  id: string
+export interface ExtractFn<T> {
+  (): Promise<AsyncIterator<T[]>>
 }
-
-export type ExtractFn<T = ExtractObject[]> = () => Promise<AsyncIterator<T>>

@@ -1,13 +1,9 @@
+import type { FluroContact } from '.'
 import { client } from '../client'
-import { ExtractFn } from '../types'
 
-export interface FluroContact {
-  id: string
-}
+const PAGE_SIZE = 50
 
-export const extract: ExtractFn = async (): Promise<
-  AsyncIterator<FluroContact[]>
-> => {
+export async function extract(): Promise<AsyncIterator<FluroContact[]>> {
   const filterReq = await client.post('/content/contact/filter', {
     allDefinitions: true,
     includeArchived: true
@@ -15,10 +11,10 @@ export const extract: ExtractFn = async (): Promise<
   const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
   return {
     next: async () => {
-      const ids = allIds.splice(0, 50)
+      const ids = allIds.splice(0, PAGE_SIZE)
       const req = await client.post('/content/contact/multiple', {
         ids,
-        limit: 50
+        limit: PAGE_SIZE
       })
       if (req.data.length === 0) {
         return { value: [], done: true }

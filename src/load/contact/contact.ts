@@ -1,10 +1,10 @@
-import { client } from '../client'
-import { LoadFn, LoadObject } from '../types'
+// import { client } from '../client'
 
-export interface RockContact extends LoadObject {
+export interface RockContact {
   id: string
 }
 
-export const load: LoadFn = async (value: RockContact): Promise<void> => {
-  await client.put('/contact', value)
+export async function load(value: RockContact): Promise<void> {
+  console.log(value)
+  // await client.put('/contact', value)
 }

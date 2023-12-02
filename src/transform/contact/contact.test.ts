@@ -4,9 +4,9 @@ import { RockContact } from '../../load/contact'
 
 describe('contact', () => {
   describe('translate', () => {
-    const fluroContact: FluroContact = {
-      id: '1'
-    }
+    const fluroContact = {
+      _id: '1'
+    } as unknown as FluroContact
     const rockContact: RockContact = {
       id: '1'
     }

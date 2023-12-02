@@ -1,4 +1,3 @@
-export interface LoadObject {
-  id: string
+export interface LoadFn<T> {
+  (value: T): Promise<void>
 }
-export type LoadFn<T = LoadObject> = (value: T) => Promise<void>

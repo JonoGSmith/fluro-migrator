@@ -1,6 +1,3 @@
-import { ExtractObject } from '../extract/types'
-import { LoadObject } from '../load/types'
-
-export type TransformFn<TInput = ExtractObject, TOutput = LoadObject> = (
-  value: TInput
-) => TOutput
+export interface TransformFn<TInput, TOutput> {
+  (value: TInput): TOutput
+}
