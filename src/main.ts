@@ -16,11 +16,15 @@ const etl: ETLTuple[] = [[extractContact, transformContact, loadContact]]
 async function main() {
   await Promise.all(
     etl.map(async ([extract, transform, load]) => {
-      // extract data
-      const data = await extract()
+      // create extract iterator
+      const iterator = await extract()
 
       // transform and load data
-      await Promise.all(data.map((value) => load(transform(value))))
+      let result = await iterator.next()
+      while (!result.done) {
+        await Promise.all(result.value.map((value) => load(transform(value))))
+        result = await iterator.next()
+      }
     })
   )
 }
