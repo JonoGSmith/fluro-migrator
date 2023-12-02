@@ -4,8 +4,7 @@ import { FluroContact } from './extract/contact'
 import { FluroFamily } from './extract/family'
 
 type temporaryIntersection = FluroContact & FluroFamily
-
-await (async function main() {
+;(async function main() {
   await Promise.all(
     tuples.map(async ([extract, transform, load]) => {
       // create extract iterator
