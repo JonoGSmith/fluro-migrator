@@ -1,7 +1,10 @@
 import 'dotenv/config'
 import { tuples } from './tuples'
+import { FluroContact } from './extract/contact'
+import { FluroFamily } from './extract/family'
 
-async function main() {
+type temporaryIntersection = FluroContact & FluroFamily
+;(async function main() {
   await Promise.all(
     tuples.map(async ([extract, transform, load]) => {
       // create extract iterator
@@ -10,11 +13,13 @@ async function main() {
       // transform and load data
       let result = await iterator.next()
       while (!result.done) {
-        await Promise.all(result.value.map((value) => load(transform(value))))
+        await Promise.all(
+          result.value.map((value) =>
+            load(transform(value as unknown as temporaryIntersection))
+          )
+        )
         result = await iterator.next()
       }
     })
   )
-}
-
-main()
+})()
