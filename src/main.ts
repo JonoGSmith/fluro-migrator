@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { extract as extractContact } from './extract/contact'
 import type { ExtractFn } from './extract/types'
 import { load as loadContact } from './load/contact'
