@@ -1,17 +1,25 @@
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
+import { Mapper } from '../../load/types'
 
-const GENDER_ENUM: { [key: string]: number } = {
-  unknown: 0,
-  male: 1,
-  female: 2
+function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
+  switch (gender) {
+    case 'male':
+      return 'Male'
+    case 'Female':
+      return 'Female'
+    default:
+    case 'unknown':
+      return 'Unknown'
+  }
 }
 
 /**
  * transforms a fluro api contact object to a rock contact object
  */
-export function transform(contact: FluroContact): RockContact {
+export function transform(mapper: Mapper, contact: FluroContact): RockContact {
   return {
+    IsSystem: false,
     BirthMonth: contact.dobMonth,
     BirthYear: contact.dobYear,
     IsDeceased: contact.deceased,
@@ -20,13 +28,8 @@ export function transform(contact: FluroContact): RockContact {
     FirstName: contact.firstName,
     LastName: contact.lastName,
     ForeignKey: contact._id,
-    Gender: GENDER_ENUM[contact.gender] ?? 0,
-    Family:
-      contact.family != null
-        ? {
-            ForeignKey: contact.family._id,
-            FamilyRole: contact.householdRole
-          }
-        : undefined
+    Gender: transformGender(contact.gender),
+    PrimaryFamilyId:
+      contact.family != null ? mapper['family'][contact.family._id] : undefined
   }
 }

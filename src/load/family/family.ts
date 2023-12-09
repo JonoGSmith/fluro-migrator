@@ -1,40 +1,51 @@
 import { omit } from 'lodash'
-import { client } from '../client'
-import { Mapper } from '../types'
-
-export interface RockFamily {
-  ForeignKey: string
-  Name: string
-  GroupTypeId?: number
-  Id?: number
-}
+import { GET, POST, PUT, components } from '../client'
 
 let GroupTypeId: number
+export type RockFamily = Omit<
+  components['schemas']['Rock.Model.Group'],
+  'GroupTypeId'
+>
 
-export async function load(
-  _mapper: Mapper,
-  value: RockFamily
-): Promise<string> {
+export async function load(value: RockFamily): Promise<number> {
   if (GroupTypeId === undefined) {
-    const groupTypesRes = await client.get('/groupTypes', {
-      params: { $filter: `Name eq 'Family'`, $select: 'Id' }
+    const { data } = await GET('/api/GroupTypes', {
+      params: {
+        query: {
+          $filter: `Name eq 'Family'`,
+          $select: 'Id'
+        }
+      }
     })
-    GroupTypeId = groupTypesRes.data[0].Id
+    if (data?.[0].Id == null) throw new Error("Couldn't find Family GroupType")
+
+    GroupTypeId = data?.[0].Id
   }
-  const familiesRes = await client.get('/groups', {
-    params: { $filter: `ForeignKey eq '${value.ForeignKey}'`, $select: 'Id' }
+  const { data: families } = await GET('/api/Groups', {
+    params: {
+      query: {
+        $filter: `ForeignKey eq '${value.ForeignKey}'`,
+        $select: 'Id'
+      }
+    }
   })
-  if (familiesRes.data.length > 0) {
-    await client.patch(
-      `/groups/${familiesRes.data[0].Id}`,
-      omit(value, 'ForeignKey')
-    )
-    return familiesRes.data[0].Id
-  } else {
-    const createRes = await client.post('/groups', {
-      ...value,
-      GroupTypeId
+  if (families != null && families.length > 0 && families[0].Id != null) {
+    await PUT('/api/Groups/{id}', {
+      params: {
+        path: {
+          id: families[0].Id
+        }
+      },
+      body: omit({ ...value, GroupTypeId }, ['ForeignKey'])
     })
-    return createRes.data
+    return families[0].Id
+  } else {
+    const { data } = await POST('/api/Groups', {
+      body: {
+        ...value,
+        GroupTypeId
+      }
+    })
+    return data as unknown as number
   }
 }

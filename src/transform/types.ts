@@ -1,3 +1,5 @@
+import { Mapper } from '../load/types'
+
 export interface TransformFn<TInput, TOutput> {
-  (value: TInput): TOutput
+  (mapper: Mapper, value: TInput): TOutput
 }

@@ -1,8 +1,7 @@
-import axios from 'axios'
+import createClient from 'openapi-fetch'
+import { paths } from './__generated__/v1'
 
-export const client = axios.create({
-  baseURL: 'https://rock.aucklandev.co.nz/api',
-  timeout: 60000,
-  headers: { 'Authorization-Token': `${process.env.ROCK_API_TOKEN}` },
-  withCredentials: true
+export const { GET, PUT, POST } = createClient<paths>({
+  baseUrl: 'https://rock.aucklandev.co.nz/',
+  headers: { 'Authorization-Token': `${process.env.ROCK_API_TOKEN}` }
 })
