@@ -10,7 +10,7 @@ async function main() {
     let result = await iterator.next()
     while (!result.done) {
       await Promise.all(
-        result.value.map((value) => load(transform(value as any) as any))
+        result.value.map((value) => load(transform(value as never) as never))
       )
       result = await iterator.next()
     }
