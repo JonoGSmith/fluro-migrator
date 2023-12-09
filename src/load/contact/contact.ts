@@ -7,6 +7,12 @@ export interface RockContact {
   LastName: string
   ForeignKey: string
   Gender: number
+  Email?: string
+  BirthDay?: number
+  BirthMonth?: number
+  BirthYear?: number
+  IsDeceased?: boolean
+  DeceasedDate?: string
   Family?: {
     ForeignKey: string
     FamilyRole: string | undefined
@@ -54,7 +60,7 @@ export async function load(
       },
       {
         params: {
-          groupRoleId: 1
+          groupRoleId: value.Family.FamilyRole === 'child' ? 4 : 3
         }
       }
     )

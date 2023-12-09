@@ -12,10 +12,14 @@ const GENDER_ENUM: { [key: string]: number } = {
  */
 export function transform(contact: FluroContact): RockContact {
   return {
+    BirthMonth: contact.dobMonth,
+    BirthYear: contact.dobYear,
+    IsDeceased: contact.deceased,
+    DeceasedDate: contact.deceasedDate,
+    Email: contact.emails[0],
     FirstName: contact.firstName,
     LastName: contact.lastName,
     Gender: GENDER_ENUM[contact.gender] ?? 0,
-    ForeignKey: contact._id,
     Family:
       contact.family != null
         ? {

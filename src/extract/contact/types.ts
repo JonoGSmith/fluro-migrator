@@ -37,7 +37,7 @@ export interface FluroContact {
   relationships: Relationship[]
   title: string
   dobVerified?: boolean
-  deceasedDate: unknown
+  deceasedDate?: string
   __v?: number
   family?: Family2
   touchpoints?: Touchpoints
