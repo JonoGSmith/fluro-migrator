@@ -10,9 +10,7 @@ export interface RockFamily {
 
 let GroupTypeId: number
 
-export async function load(
-  value: RockFamily
-): Promise<[id: string, value: RockFamily]> {
+export async function load(value: RockFamily): Promise<void> {
   if (GroupTypeId === undefined) {
     const groupTypesRes = await client.get('/groupTypes', {
       params: { $filter: `Name eq 'Family'`, $select: 'Id' }
