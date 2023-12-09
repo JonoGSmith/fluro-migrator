@@ -7,6 +7,12 @@ export interface RockContact {
   LastName: string
   ForeignKey: string
   Gender: number
+  Email?: string
+  BirthDay?: number
+  BirthMonth?: number
+  BirthYear?: number
+  IsDeceased?: boolean
+  DeceasedDate?: string
 }
 
 export async function load(
