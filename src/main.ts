@@ -5,6 +5,10 @@ import { Mapper } from './load/types'
 async function main() {
   const loaderMap: Mapper = {}
 
+  // export interface Mapper {
+  //   [tupleName: string]: { [fluroId: string]: string }
+  // }
+
   for (const [name, extract, transform, load] of tuples) {
     loaderMap[name] = {}
 
