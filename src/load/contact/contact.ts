@@ -9,8 +9,8 @@ export interface RockContact {
 }
 
 export async function load(value: RockContact): Promise<void> {
-  const contactsRes = await client.get('/People', {
-    params: { $filter: `ForeignKey eq '${value.ForeignKey}'` }
+  const contactsRes = await client.get('/people', {
+    params: { $filter: `ForeignKey eq '${value.ForeignKey}'`, $select: 'Id' }
   })
   if (contactsRes.data.length > 0) {
     await client.patch(

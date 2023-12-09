@@ -7,6 +7,7 @@ export async function extract(): Promise<AsyncIterator<FluroFamily[]>> {
     includeArchived: true
   })
   const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
+  console.log(`extracting ${allIds.length} families`)
   return {
     next: async () => {
       const ids = allIds.splice(0, 50)

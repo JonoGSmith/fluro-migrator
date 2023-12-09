@@ -3,6 +3,7 @@ import { RockFamily } from '../../load/family/family'
 
 export function transform(family: FluroFamily): RockFamily {
   return {
-    id: family._id
+    ForeignKey: family._id,
+    Name: family.title
   }
 }
