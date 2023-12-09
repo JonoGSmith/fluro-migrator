@@ -6,6 +6,7 @@ import { transform as transformFamily } from '../../transform/family'
 import { ETLTuple } from '../types'
 
 export const familyEtl: ETLTuple<FluroFamily, RockFamily> = [
+  'family',
   extractFamily,
   transformFamily,
   loadFamily

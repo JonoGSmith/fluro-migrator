@@ -1,5 +1,6 @@
 import { omit } from 'lodash'
 import { client } from '../client'
+import { Mapper } from '../types'
 
 export interface RockContact {
   FirstName: string
@@ -8,7 +9,10 @@ export interface RockContact {
   Gender: number
 }
 
-export async function load(value: RockContact): Promise<void> {
+export async function load(
+  _mapper: Mapper,
+  value: RockContact
+): Promise<string> {
   const contactsRes = await client.get('/people', {
     params: { $filter: `ForeignKey eq '${value.ForeignKey}'`, $select: 'Id' }
   })
@@ -17,12 +21,9 @@ export async function load(value: RockContact): Promise<void> {
       `/people/${contactsRes.data[0].Id}`,
       omit(value, 'ForeignKey')
     )
-    console.log(
-      `updated contact ${value.ForeignKey} to ${contactsRes.data[0].Id}`,
-      value
-    )
+    return contactsRes.data[0].Id
   } else {
     const createRes = await client.post('/people', value)
-    console.log(`created contact ${value.ForeignKey} to ${createRes.data}`)
+    return createRes.data
   }
 }

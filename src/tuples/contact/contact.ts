@@ -6,6 +6,7 @@ import { transform as transformContact } from '../../transform/contact'
 import { ETLTuple } from '../types'
 
 export const contactEtl: ETLTuple<FluroContact, RockContact> = [
+  'contact',
   extractContact,
   transformContact,
   loadContact

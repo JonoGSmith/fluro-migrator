@@ -1,5 +1,6 @@
 import { omit } from 'lodash'
 import { client } from '../client'
+import { Mapper } from '../types'
 
 export interface RockFamily {
   ForeignKey: string
@@ -10,7 +11,10 @@ export interface RockFamily {
 
 let GroupTypeId: number
 
-export async function load(value: RockFamily): Promise<void> {
+export async function load(
+  _mapper: Mapper,
+  value: RockFamily
+): Promise<string> {
   if (GroupTypeId === undefined) {
     const groupTypesRes = await client.get('/groupTypes', {
       params: { $filter: `Name eq 'Family'`, $select: 'Id' }
@@ -25,18 +29,12 @@ export async function load(value: RockFamily): Promise<void> {
       `/groups/${familiesRes.data[0].Id}`,
       omit(value, 'ForeignKey')
     )
-    console.log(
-      `updated family ${value.ForeignKey} to ${familiesRes.data[0].Id}`,
-      value
-    )
+    return familiesRes.data[0].Id
   } else {
     const createRes = await client.post('/groups', {
       ...value,
       GroupTypeId
     })
-    console.log(
-      `created family ${value.ForeignKey} to ${createRes.data}`,
-      value
-    )
+    return createRes.data
   }
 }

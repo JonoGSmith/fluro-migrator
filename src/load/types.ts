@@ -1,3 +1,6 @@
+export interface Mapper {
+  [tupleName: string]: { [fluroId: string]: string }
+}
 export interface LoadFn<T> {
-  (value: T): Promise<void>
+  (mapper: Mapper, value: T): Promise<string>
 }

@@ -3,7 +3,8 @@ import { LoadFn } from '../load/types'
 import { TransformFn } from '../transform/types'
 
 export type ETLTuple<TInput, TOutput> = [
-  ExtractFn<TInput>,
-  TransformFn<TInput, TOutput>,
-  LoadFn<TOutput>
+  name: string,
+  extract: ExtractFn<TInput>,
+  transform: TransformFn<TInput, TOutput>,
+  load: LoadFn<TOutput>
 ]
