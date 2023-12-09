@@ -19,6 +19,7 @@ export function transform(contact: FluroContact): RockContact {
     Email: contact.emails[0],
     FirstName: contact.firstName,
     LastName: contact.lastName,
+    ForeignKey: contact._id,
     Gender: GENDER_ENUM[contact.gender] ?? 0,
     Family:
       contact.family != null
