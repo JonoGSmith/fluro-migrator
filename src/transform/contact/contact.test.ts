@@ -1,6 +1,7 @@
 import { transform } from '.'
 import { FluroContact } from '../../extract/contact'
 import { RockContact } from '../../load/contact'
+import { Mapper } from '../../load/types'
 
 describe('contact', () => {
   describe('translate', () => {
@@ -11,13 +12,22 @@ describe('contact', () => {
       gender: 'male'
     } as unknown as FluroContact
     const rockContact: RockContact = {
-      ForeignKey: '1',
+      BirthMonth: undefined,
+      BirthYear: undefined,
+      DeceasedDate: undefined,
+      Email: '',
       FirstName: 'John',
+      ForeignKey: '1',
+      Gender: 'Male',
+      IsDeceased: undefined,
+      IsSystem: false,
       LastName: 'Smith',
-      Gender: 1
-    }
+      PrimaryFamilyId: undefined
+    } as RockContact
     it('should translate a fluro api contact to a rock contact', () => {
-      expect(transform(fluroContact)).toEqual(rockContact)
+      const mapper: Mapper = {}
+      mapper['contact'] = {}
+      expect(transform(mapper, fluroContact)).toEqual(rockContact)
     })
   })
 })

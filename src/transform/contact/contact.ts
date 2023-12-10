@@ -24,7 +24,7 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
     BirthYear: contact.dobYear,
     IsDeceased: contact.deceased,
     DeceasedDate: contact.deceasedDate,
-    Email: contact.emails[0],
+    Email: contact?.emails?.[0] ?? '',
     FirstName: contact.firstName,
     LastName: contact.lastName,
     ForeignKey: contact._id,
