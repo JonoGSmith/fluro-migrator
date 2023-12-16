@@ -4,6 +4,7 @@ import { GET, POST, PUT, components } from '../client'
 export type RockContact = components['schemas']['Rock.Model.Person']
 
 export async function load(value: RockContact): Promise<number> {
+  // if not part of a family, add person and create a new family
   if (value.PrimaryFamilyId == null) {
     const { data } = await POST('/api/People', {
       body: value
@@ -19,6 +20,7 @@ export async function load(value: RockContact): Promise<number> {
       }
     }
   })
+  // if person exists, make sure they are in correct family
   if (people != null && people.length > 0 && people[0].Id != null) {
     await POST('/api/People/AddExistingPersonToFamily', {
       params: {
@@ -40,6 +42,7 @@ export async function load(value: RockContact): Promise<number> {
     })
     return people[0].Id
   } else {
+    // add new person to rock and also puts them into their correct family
     const { data } = await POST('/api/People/AddNewPersonToFamily/{familyId}', {
       params: {
         path: {
