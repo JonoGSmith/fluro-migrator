@@ -1,14 +1,16 @@
 import type { FluroContact } from '.'
 import { client } from '../client'
+import { ExtractIterator, PAGE_SIZE } from '../types'
 
-const PAGE_SIZE = 50
-
-export async function extract(): Promise<AsyncIterator<FluroContact[]>> {
+export async function extract(): Promise<
+  AsyncIterator<ExtractIterator<FluroContact>>
+> {
   const filterReq = await client.post('/content/contact/filter', {
     allDefinitions: true,
     includeArchived: true
   })
   const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
+  const max = allIds.length
   return {
     next: async () => {
       const ids = allIds.splice(0, PAGE_SIZE)
@@ -17,9 +19,9 @@ export async function extract(): Promise<AsyncIterator<FluroContact[]>> {
         limit: PAGE_SIZE
       })
       if (req.data.length === 0) {
-        return { value: [], done: true }
+        return { value: { collection: [], max }, done: true }
       } else {
-        return { value: req.data, done: false }
+        return { value: { collection: req.data, max }, done: false }
       }
     }
   }

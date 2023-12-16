@@ -1,5 +1,5 @@
 export interface ExtractFn<T> {
-  (): Promise<AsyncIterator<T[]>>
+  (): Promise<AsyncIterator<ExtractIterator<T>>>
 }
 
 export interface Realm {
@@ -11,3 +11,10 @@ export interface Realm {
   slug?: string
   definition?: string
 }
+
+export interface ExtractIterator<T> {
+  collection: T[]
+  max: number
+}
+
+export const PAGE_SIZE = 50

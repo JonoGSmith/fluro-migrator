@@ -1,24 +1,27 @@
 import { client } from '../client'
+import { ExtractIterator, PAGE_SIZE } from '../types'
 import { FluroFamily } from './types'
 
-export async function extract(): Promise<AsyncIterator<FluroFamily[]>> {
+export async function extract(): Promise<
+  AsyncIterator<ExtractIterator<FluroFamily>>
+> {
   const filterReq = await client.post('/content/family/filter', {
     allDefinitions: true,
     includeArchived: true
   })
   const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
-  console.log(`extracting ${allIds.length} families`)
+  const max = allIds.length
   return {
     next: async () => {
-      const ids = allIds.splice(0, 50)
+      const ids = allIds.splice(0, PAGE_SIZE)
       const req = await client.post('/content/family/multiple', {
         ids,
-        limit: 50
+        limit: PAGE_SIZE
       })
       if (req.data.length === 0) {
-        return { value: [], done: true }
+        return { value: { collection: [], max }, done: true }
       } else {
-        return { value: req.data, done: false }
+        return { value: { collection: req.data, max }, done: false }
       }
     }
   }
