@@ -19,7 +19,7 @@ export async function load(value: RockContact): Promise<number> {
       }
     }
   })
-  if (people != null && people[0].Id != null) {
+  if (people != null && people.length > 0 && people[0].Id != null) {
     await POST('/api/People/AddExistingPersonToFamily', {
       params: {
         query: {
