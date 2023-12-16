@@ -29,7 +29,7 @@ async function main() {
     const progress = new SingleBar({
       format: `${colors.cyan(
         '{bar}'
-      )} | {percentage}% || {value}/{total} || ${name}`,
+      )} | {percentage}% | {value}/{total} | ETA: {eta}s | ${name}`,
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
       hideCursor: true
@@ -55,7 +55,7 @@ async function main() {
 
       await fs.writeFile(
         path.join(__dirname, '..', 'tmp', `${name}Mapper.json`),
-        JSON.stringify(mapper[name]),
+        JSON.stringify(mapper[name], null, 2),
         { flag: 'w' }
       )
 
