@@ -1,7 +1,4 @@
-// import { contactEtl } from './contact/contact'
+import { contactEtl } from './contact/contact'
 import { familyEtl } from './family/family'
 
-export const tuples = [
-  familyEtl
-  //contactEtl
-]
+export const tuples = [familyEtl, contactEtl]
