@@ -1,7 +1,9 @@
 import { omit } from 'lodash'
 import { GET, POST, PUT, components } from '../client'
 
-export type RockContact = components['schemas']['Rock.Model.Person']
+export type RockContact = components['schemas']['Rock.Model.Person'] & {
+  FamilyRole?: number
+}
 
 export async function load(value: RockContact): Promise<number> {
   // if not part of a family, add person and create a new family
