@@ -31,6 +31,9 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
     Gender: transformGender(contact.gender),
     PrimaryFamilyId:
       contact.family != null ? mapper['family'][contact.family._id] : undefined,
-    FamilyRole: contact?.householdRole === 'child' ? 4 : 3
+    FamilyRole:
+      contact?.householdRole != null && contact.householdRole === 'child'
+        ? 4
+        : 3
   }
 }
