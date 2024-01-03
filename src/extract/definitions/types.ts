@@ -39,16 +39,17 @@ interface TypeDefinition {
 export interface Definition {
   _id: string
   title: string
-  plural: string
-  definitionName: string
-  fields: Field[]
-  account: string
+  plural?: string
+  definitionName?: string
+  fields?: Field[]
+  account?: string
   managedOwners: unknown[]
-  owners: string[]
-  author: string
-  realms: { _id: string; title: string; bgColor: string; color: string }[]
-  status: string
-  _type: string
+  owners?: string[]
+  author?: string
+  realms?: { _id: string; title: string; bgColor: string; color: string }[]
+  status?: string
+  _type?: string
+  _matched?: true
 }
 
 export interface FluroDefinitions {
