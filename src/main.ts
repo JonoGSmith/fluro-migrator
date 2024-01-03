@@ -29,7 +29,7 @@ async function main() {
     const progress = new SingleBar({
       format: `${colors.cyan(
         '{bar}'
-      )} | {percentage}% | {value}/{total} | ETA: {eta}s | ${name}`,
+      )} ${name} | {percentage}% | {value}/{total} | duration: {duration_formatted}`,
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
       hideCursor: true
