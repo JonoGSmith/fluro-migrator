@@ -1,13 +1,15 @@
 import { omit } from 'lodash'
 import { GET, POST, PUT, components } from '../client'
 
-export type RockContact = components['schemas']['Rock.Model.Person']
+export type RockContact = components['schemas']['Rock.Model.Person'] & {
+  FamilyRole: number
+}
 
 export async function load(value: RockContact): Promise<number> {
   // if not part of a family, add person and create a new family
   if (value.PrimaryFamilyId == null) {
     const { data } = await POST('/api/People', {
-      body: value
+      body: omit(value, ['FamilyRole'])
     })
     return data as unknown as number
   }
@@ -27,7 +29,7 @@ export async function load(value: RockContact): Promise<number> {
         query: {
           personId: people[0].Id,
           familyId: value.PrimaryFamilyId,
-          groupRoleId: 4,
+          groupRoleId: value.FamilyRole ?? 3,
           removeFromOtherFamilies: true
         }
       }
@@ -38,7 +40,7 @@ export async function load(value: RockContact): Promise<number> {
           id: people[0].Id
         }
       },
-      body: omit(value, ['ForeignKey'])
+      body: omit(value, ['ForeignKey', 'FamilyRole'])
     })
     return people[0].Id
   } else {
@@ -49,10 +51,10 @@ export async function load(value: RockContact): Promise<number> {
           familyId: value.PrimaryFamilyId
         },
         query: {
-          groupRoleId: 4
+          groupRoleId: value.FamilyRole ?? 3
         }
       },
-      body: value
+      body: omit(value, ['FamilyRole'])
     })
     return data as unknown as number
   }
