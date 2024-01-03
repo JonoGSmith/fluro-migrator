@@ -9,7 +9,13 @@ const client = axios.create({
 })
 
 async function downloadSchema() {
-  const REST_CONTROLLER_NAMES = ['Groups', 'GroupTypes', 'People']
+  const REST_CONTROLLER_NAMES = [
+    'Groups',
+    'GroupTypes',
+    'People',
+    'DefinedTypes',
+    'DefinedValues'
+  ]
   // const REST_CONTROLLER_NAMES = (await client.get(
   //   '/RestControllers/RestControllerNames?includeObsolete=false'
   // )).data

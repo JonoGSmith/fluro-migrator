@@ -1,0 +1,47 @@
+import { GET, POST, components } from '../client'
+import { MapperObject } from '../types'
+import { omit } from 'lodash'
+
+export type RockContactDefinitions =
+  components['schemas']['Rock.Model.DefinedValue'] & {
+    DefinitionName: string
+  }
+
+export let allExistingRockDefinitions: Array<RockContactDefinitions> | undefined
+
+export async function load(
+  transformedDefinition: RockContactDefinitions
+): Promise<MapperObject> {
+  //get list of all definedValues in rock
+  const _allExistingRockDefinitions =
+    allExistingRockDefinitions ?? (await GET('/api/DefinedValues'))
+
+  //check that singleton object has been populated properly
+  if (!Array.isArray(_allExistingRockDefinitions)) {
+    throw new Error('_allExistingRockDefinitions is undefiend and not an array')
+  }
+
+  //check to see if transformed value already exists in Rock
+  for (const rockDefinitions of _allExistingRockDefinitions) {
+    if (rockDefinitions.Value === transformedDefinition.Value) {
+      return {
+        rockId: rockDefinitions.Id as number,
+        data: {
+          ['rockContactDefinition']: rockDefinitions.Value.toLowerCase()
+        }
+      }
+    }
+  }
+
+  //load object to rock if there is no duplicates
+  const { data } = await POST('/api/DefinedValues', {
+    body: omit(transformedDefinition, ['DefinitionName'])
+  })
+
+  return {
+    rockId,
+    data: {
+      ['rockContactDefinition']: unknown
+    }
+  }
+}

@@ -1,7 +1,6 @@
 import type { FluroDefinitions } from '.'
 import { client } from '../client'
 import { ExtractIterator, PAGE_SIZE } from '../types'
-import { Definition } from './types'
 
 export async function extract(): Promise<
   AsyncIterator<ExtractIterator<FluroDefinitions>>
@@ -31,7 +30,7 @@ export async function extract(): Promise<
       ]
     }
   })
-  const allIds = filterReq.data.map((val: Definition) => {
+  const allIds = filterReq.data.map((val: FluroDefinitions) => {
     if (val?._matched) return val._id
   })
   const max = allIds.length

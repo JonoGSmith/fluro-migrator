@@ -14,29 +14,13 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
   }
 }
 
-//to do: add definitions that don't exist to -  defined values -> defined type 4,
-function transformDefinitions(definition: string): number {
-  switch (definition) {
-    case 'attender':
-      return 146
-    case 'committed':
-      return 65
-    case 'fringe':
-      return 66
-    case 'leaderOfLeaders':
-      return 65
-    case 'supporter':
-      return 67
-    default:
-    case 'visitor':
-      return 66
-  }
-}
-
 /**
  * transforms a fluro api contact object to a rock contact object
  */
 export function transform(mapper: Mapper, contact: FluroContact): RockContact {
+  const ConnectionStatusValueId = mapper['definitiion'].find(
+    ({ rockId, data }) => data.definitionName === contact.definition
+  )?.rockId
   return {
     IsSystem: false,
     BirthMonth: contact.dobMonth,
@@ -48,9 +32,7 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
     LastName: contact.lastName,
     ForeignKey: contact._id,
     Gender: transformGender(contact.gender),
-    ConnectionStatusValueId: transformDefinitions(
-      contact?.definition ?? 'visitor'
-    ),
+    ConnectionStatusValueId,
     PrimaryFamilyId:
       contact.family != null
         ? mapper['family'][contact.family._id]?.rockId
