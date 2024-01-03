@@ -1,16 +1,16 @@
-import { GET, POST, components } from '../client'
-import { MapperObject } from '../types'
+import { GET, POST, components } from '../../client'
+import { MapperObject } from '../../types'
 import { omit } from 'lodash'
 
-export type RockContactDefinitions =
+export type RockContactDefinition =
   components['schemas']['Rock.Model.DefinedValue'] & {
     DefinitionName: string
   }
 
-export let allExistingRockDefinitions: Array<RockContactDefinitions> | undefined
+export let allExistingRockDefinitions: Array<RockContactDefinition> | undefined
 
 export async function load(
-  transformedDefinition: RockContactDefinitions
+  transformedDefinition: RockContactDefinition
 ): Promise<MapperObject> {
   //get list of all definedValues in rock
   const _allExistingRockDefinitions =

@@ -1,9 +1,11 @@
-import type { FluroDefinitions } from '.'
-import { client } from '../client'
-import { ExtractIterator, PAGE_SIZE } from '../types'
+import { FluroDefinition } from '../types'
+import { client } from '../../client'
+import { ExtractIterator, PAGE_SIZE } from '../../types'
+
+export type FluroContactDefinition = FluroDefinition
 
 export async function extract(): Promise<
-  AsyncIterator<ExtractIterator<FluroDefinitions>>
+  AsyncIterator<ExtractIterator<FluroDefinition>>
 > {
   const filterReq = await client.post('/content/definition/filter', {
     allDefinitions: true,
@@ -30,7 +32,7 @@ export async function extract(): Promise<
       ]
     }
   })
-  const allIds = filterReq.data.map((val: FluroDefinitions) => {
+  const allIds = filterReq.data.map((val: FluroDefinition) => {
     if (val?._matched) return val._id
   })
   const max = allIds.length

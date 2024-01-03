@@ -1,7 +1,7 @@
-import { FluroDefinitions } from '../../extract/contactDefinitions'
-import { Mapper } from '../../load/types'
+import { FluroContactDefinition } from '../../../extract/definition/contact'
+import { Mapper } from '../../../load/types'
 
-export function transform(_mapper: Mapper, value: FluroDefinitions) {
+export function transform(_mapper: Mapper, value: FluroContactDefinition) {
   return {
     DefinedTypeId: 4,
     Value: value.title,

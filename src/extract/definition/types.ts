@@ -1,4 +1,4 @@
-export interface FluroDefinitions {
+export interface FluroDefinition {
   _id: string
   title: string
   plural?: string
