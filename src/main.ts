@@ -44,9 +44,11 @@ async function main() {
             progress.increment()
             return { [value._id]: mapper[name][value._id] }
           } else {
-            const id = await load(transform(mapper, value as never) as never)
+            const mapperObject = await load(
+              transform(mapper, value as never) as never
+            )
             progress.increment()
-            return { [value._id]: id }
+            return { [value._id]: mapperObject }
           }
         })
       )

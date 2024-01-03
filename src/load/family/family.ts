@@ -1,5 +1,6 @@
 import { omit } from 'lodash'
 import { GET, POST, PUT, components } from '../client'
+import { MapperObject } from '../types'
 
 let GroupTypeId: number
 export type RockFamily = Omit<
@@ -7,7 +8,7 @@ export type RockFamily = Omit<
   'GroupTypeId'
 >
 
-export async function load(value: RockFamily): Promise<number> {
+export async function load(value: RockFamily): Promise<MapperObject> {
   if (GroupTypeId === undefined) {
     const { data } = await GET('/api/GroupTypes', {
       params: {
@@ -38,7 +39,7 @@ export async function load(value: RockFamily): Promise<number> {
       },
       body: omit({ ...value, GroupTypeId }, ['ForeignKey'])
     })
-    return families[0].Id
+    return { rockId: families[0].Id }
   } else {
     const { data } = await POST('/api/Groups', {
       body: {
@@ -46,6 +47,6 @@ export async function load(value: RockFamily): Promise<number> {
         GroupTypeId
       }
     })
-    return data as unknown as number
+    return { rockId: data as unknown as number }
   }
 }

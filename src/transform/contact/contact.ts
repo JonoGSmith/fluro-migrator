@@ -52,7 +52,9 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
       contact?.definition ?? 'visitor'
     ),
     PrimaryFamilyId:
-      contact.family != null ? mapper['family'][contact.family._id] : undefined,
+      contact.family != null
+        ? mapper['family'][contact.family._id]?.rockId
+        : undefined,
     FamilyRole:
       contact?.householdRole != null && contact.householdRole === 'child'
         ? 4

@@ -1,6 +1,14 @@
+export interface MapperObject {
+  rockId: number
+  data?: {
+    [key: string]: unknown
+  }
+}
 export interface Mapper {
-  [tupleName: string]: { [fluroId: string]: number }
+  [tupleName: string]: {
+    [fluroId: string]: MapperObject
+  }
 }
 export interface LoadFn<T> {
-  (value: T): Promise<number>
+  (value: T): Promise<MapperObject>
 }

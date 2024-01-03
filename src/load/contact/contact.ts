@@ -1,17 +1,18 @@
 import { omit } from 'lodash'
 import { GET, POST, PUT, components } from '../client'
+import { MapperObject } from '../types'
 
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
   FamilyRole: number
 }
 
-export async function load(value: RockContact): Promise<number> {
+export async function load(value: RockContact): Promise<MapperObject> {
   // if not part of a family, add person and create a new family
   if (value.PrimaryFamilyId == null) {
     const { data } = await POST('/api/People', {
       body: omit(value, ['FamilyRole'])
     })
-    return data as unknown as number
+    return { rockId: data as unknown as number }
   }
 
   const { data: people } = await GET('/api/People', {
@@ -42,7 +43,7 @@ export async function load(value: RockContact): Promise<number> {
       },
       body: omit(value, ['ForeignKey', 'FamilyRole'])
     })
-    return people[0].Id
+    return { rockId: people[0].Id }
   } else {
     // add new person to rock and also puts them into their correct family
     const { data } = await POST('/api/People/AddNewPersonToFamily/{familyId}', {
@@ -56,6 +57,6 @@ export async function load(value: RockContact): Promise<number> {
       },
       body: omit(value, ['FamilyRole'])
     })
-    return data as unknown as number
+    return { rockId: data as unknown as number }
   }
 }
