@@ -1,4 +1,4 @@
-import type { components } from '../../client';
+import type { components } from '../../client'
 import { GET, POST } from '../../client'
 import type { MapperObject } from '../../types'
 import { omit } from 'lodash'
@@ -8,7 +8,9 @@ export type RockContactDefinition =
     DefinitionName: string
   }
 
-export let allExistingRockDefinitions: Array<RockContactDefinition> | undefined
+export let allExistingRockDefinitions:
+  | { data: Array<RockContactDefinition> }
+  | undefined
 
 export async function load(
   transformedDefinition: RockContactDefinition
@@ -18,13 +20,16 @@ export async function load(
     allExistingRockDefinitions ?? (await GET('/api/DefinedValues'))
 
   //check that singleton object has been populated properly
-  if (!Array.isArray(_allExistingRockDefinitions)) {
+  if (!Array.isArray(_allExistingRockDefinitions.data)) {
     throw new Error('_allExistingRockDefinitions is undefiend and not an array')
   }
 
   //check to see if transformed value already exists in Rock
-  for (const rockDefinitions of _allExistingRockDefinitions) {
-    if (rockDefinitions.Value === transformedDefinition.Value) {
+  for (const rockDefinitions of _allExistingRockDefinitions.data) {
+    if (
+      rockDefinitions.Value === transformedDefinition.Value &&
+      rockDefinitions.DefinedTypeId === 4
+    ) {
       return {
         rockId: rockDefinitions.Id as number,
         data: {
