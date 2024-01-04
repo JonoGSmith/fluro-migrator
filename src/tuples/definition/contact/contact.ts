@@ -6,7 +6,7 @@ import { load } from '../../../load/definition/contact'
 import { transform } from '../../../transform/definition/contact'
 import type { ETLTuple } from '../../types'
 
-export const definitionContactETL: ETLTuple<
+export const definitionContactEtl: ETLTuple<
   FluroDefinitionContact,
   RockDefinitionContact
 > = ['definition/contact', extract, transform, load]
