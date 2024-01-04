@@ -7,18 +7,10 @@ import { SingleBar } from 'cli-progress'
 import colors from 'ansi-colors'
 
 async function main() {
-  const mapper: Mapper = {}
+  const mapper: Mapper = await loadMapper()
 
   for (const [name, extract, transform, load] of tuples) {
-    try {
-      const cache = await fs.readFile(
-        path.join(__dirname, '..', 'tmp', `${name}Mapper.json`),
-        'utf8'
-      )
-      mapper[name] = JSON.parse(cache)
-    } catch (error) {
-      mapper[name] = {}
-    }
+    if (mapper[name] == null) mapper[name] = {}
 
     // create extract iterator
     const iterator = await extract()
@@ -65,6 +57,41 @@ async function main() {
     }
     progress.stop()
   }
+}
+
+async function loadMapper() {
+  const mapper: Mapper = {}
+
+  const walk = async (dir: string, filelist: string[] = []) => {
+    const files = await fs.readdir(dir)
+
+    for (const file of files) {
+      const filepath = path.join(dir, file)
+      const stat = await fs.stat(filepath)
+
+      if (stat.isDirectory()) {
+        filelist = await walk(filepath, filelist)
+      } else {
+        filelist.push(file)
+      }
+    }
+
+    return filelist
+  }
+
+  const files = (await walk(path.join(__dirname, '..', 'tmp', 'mapper'))).map(
+    (name) => name.replace('.json', '')
+  )
+
+  for (const file of files) {
+    const cache = await fs.readFile(
+      path.join(__dirname, '..', 'tmp', 'mapper', `${file}.json`),
+      'utf8'
+    )
+    mapper[file] = JSON.parse(cache)
+  }
+
+  return mapper
 }
 
 main()
