@@ -1,16 +1,22 @@
-import type { FluroTeamDefinition } from '../../../extract/definition/team'
+import type { FluroDefinitionTeam } from '../../../extract/definition/team'
+import type { RockDefinitionTeam } from '../../../load/definition/team'
 import type { Mapper } from '../../../load/types'
 
 export function transform(
   _mapper: Mapper,
-  teamDefinition: FluroTeamDefinition
-) {
+  definitionTeam: FluroDefinitionTeam
+): RockDefinitionTeam {
   return {
     IsSystem: false,
-    IsSecurityRole: false,
-    IsActive: true,
-    ForeignKey: teamDefinition._id,
-    Name: teamDefinition.title,
-    IsPublic: false
+    ForeignKey: definitionTeam._id,
+    Name: definitionTeam.title,
+    Description: definitionTeam.firstLine,
+    CreatedDateTime: definitionTeam.created,
+    ModifiedDateTime: definitionTeam.updated,
+    GroupTerm: 'Group',
+    GroupMemberTerm: 'Member',
+    IsCapacityRequired: false,
+    ShowAdministrator: true,
+    Order: 0
   }
 }
