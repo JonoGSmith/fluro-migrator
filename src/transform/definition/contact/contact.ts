@@ -1,18 +1,22 @@
-import type { FluroContactDefinition } from '../../../extract/definition/contact'
+import type { FluroDefinitionContact } from '../../../extract/definition/contact'
 import type { Mapper } from '../../../load/types'
-import type { RockContactDefinition } from '../../../load/definition/contact'
+import type { RockDefinitionContact } from '../../../load/definition/contact'
 
 export function transform(
   _mapper: Mapper,
-  value: FluroContactDefinition
-): RockContactDefinition {
+  value: FluroDefinitionContact
+): RockDefinitionContact {
   return {
-    DefinedTypeId: 4,
+    IsSystem: false,
+    Order: 0,
     Value: value.title,
     Description: value.firstLine,
     IsActive: value.status === 'active',
     CreatedDateTime: value.created,
     ModifiedDateTime: value.updated,
-    DefinitionName: value.definitionName
-  } as RockContactDefinition
+    ForeignKey: value._id,
+    mapper: {
+      definitionName: value.definitionName
+    }
+  }
 }

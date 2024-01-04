@@ -1,53 +1,54 @@
 import type { components } from '../../client'
-import { GET, POST } from '../../client'
+import { GET, PUT, POST } from '../../client'
 import type { MapperObject } from '../../types'
 import { omit } from 'lodash'
 
-export type RockContactDefinition =
-  components['schemas']['Rock.Model.DefinedValue'] & {
-    DefinitionName: string
-  }
+let DefinedTypeId: number
+export type RockDefinitionContact = Omit<
+  components['schemas']['Rock.Model.DefinedValue'],
+  'DefinedTypeId'
+> & {
+  mapper: MapperObject['data']
+}
 
 export let allExistingRockDefinitions:
-  | { data: Array<RockContactDefinition> }
+  | { data: Array<RockDefinitionContact> }
   | undefined
 
 export async function load(
-  transformedDefinition: RockContactDefinition
+  value: RockDefinitionContact
 ): Promise<MapperObject> {
-  //get list of all definedValues in rock
-  const _allExistingRockDefinitions =
-    allExistingRockDefinitions ?? (await GET('/api/DefinedValues'))
+  // TODO: fetch DefinedTypeId from Rock
+  DefinedTypeId = 4
 
-  //check that singleton object has been populated properly
-  if (!Array.isArray(_allExistingRockDefinitions.data)) {
-    throw new Error('_allExistingRockDefinitions is undefiend and not an array')
-  }
-
-  //check to see if transformed value already exists in Rock
-  for (const rockDefinitions of _allExistingRockDefinitions.data) {
-    if (
-      rockDefinitions.Value === transformedDefinition.Value &&
-      rockDefinitions.DefinedTypeId === 4
-    ) {
-      return {
-        rockId: rockDefinitions.Id as number,
-        data: {
-          ['rockContactDefinition']: rockDefinitions.Value.toLowerCase()
-        }
+  const { data } = await GET('/api/DefinedValues', {
+    params: {
+      query: {
+        $filter: `ForeignKey eq '${value.ForeignKey}'`,
+        $select: 'Id'
       }
     }
-  }
-
-  //load object to rock if there is no duplicates
-  const { data } = await POST('/api/DefinedValues', {
-    body: omit(transformedDefinition, ['DefinitionName'])
   })
-
-  return {
-    rockId: data as unknown as number,
-    data: {
-      ['rockContactDefinition']: transformedDefinition.DefinitionName
+  if (data != null && data.length > 0 && data[0].Id != null) {
+    await PUT('/api/DefinedValues/{id}', {
+      params: {
+        path: {
+          id: data[0].Id
+        }
+      },
+      body: omit({ ...value, DefinedTypeId }, ['ForeignKey', 'mapper'])
+    })
+    return {
+      rockId: data[0].Id,
+      data: value.mapper
+    }
+  } else {
+    const { data } = await POST('/api/DefinedValues', {
+      body: omit({ ...value, DefinedTypeId }, 'mapper')
+    })
+    return {
+      rockId: data as unknown as number,
+      data: value.mapper
     }
   }
 }
