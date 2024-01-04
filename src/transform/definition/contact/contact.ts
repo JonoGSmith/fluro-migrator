@@ -14,11 +14,5 @@ export function transform(
     CreatedDateTime: value.created,
     ModifiedDateTime: value.updated,
     DefinitionName: value.definitionName
-    // ModifiedByPersonAliasId: null,
-    // Attributes: null,
-    // AttributeValues: null,
-    // ForeignId: null,
-    // ForeignGuid: null,
-    // ForeignKey: null
   } as RockContactDefinition
 }
