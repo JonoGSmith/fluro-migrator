@@ -1,5 +1,5 @@
 import { client } from '../../client'
-import type { ExtractIterator} from '../../types';
+import type { ExtractIterator } from '../../types'
 import { PAGE_SIZE } from '../../types'
 import type { FluroDefinition } from '../types'
 
@@ -20,9 +20,7 @@ export function extractDefinition(parentType: string) {
         ]
       }
     })
-    const allIds = filterReq.data.map((val: FluroDefinition) => {
-      if (val?._matched) return val._id
-    })
+    const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
     const max = allIds.length
 
     return {
