@@ -1,7 +1,11 @@
 import type { FluroContactDefinition } from '../../../extract/definition/contact'
 import type { Mapper } from '../../../load/types'
+import type { RockContactDefinition } from '../../../load/definition/contact'
 
-export function transform(_mapper: Mapper, value: FluroContactDefinition) {
+export function transform(
+  _mapper: Mapper,
+  value: FluroContactDefinition
+): RockContactDefinition {
   return {
     DefinedTypeId: 4,
     Value: value.title,
@@ -16,5 +20,5 @@ export function transform(_mapper: Mapper, value: FluroContactDefinition) {
     // ForeignId: null,
     // ForeignGuid: null,
     // ForeignKey: null
-  }
+  } as RockContactDefinition
 }

@@ -18,9 +18,6 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
  * transforms a fluro api contact object to a rock contact object
  */
 export function transform(mapper: Mapper, contact: FluroContact): RockContact {
-  const ConnectionStatusValueId = mapper['definitiion'].find(
-    ({ rockId, data }) => data.definitionName === contact.definition
-  )?.rockId
   return {
     IsSystem: false,
     BirthMonth: contact.dobMonth,
@@ -32,7 +29,7 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
     LastName: contact.lastName,
     ForeignKey: contact._id,
     Gender: transformGender(contact.gender),
-    ConnectionStatusValueId,
+    ConnectionStatusValueId: mapper['contactDefinition'][contact._id].rockId,
     PrimaryFamilyId:
       contact.family != null
         ? mapper['family'][contact.family._id]?.rockId

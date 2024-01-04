@@ -40,9 +40,9 @@ export async function load(
   })
 
   return {
-    rockId,
+    rockId: data as unknown as number,
     data: {
-      ['rockContactDefinition']: unknown
+      ['rockContactDefinition']: transformedDefinition.DefinitionName
     }
   }
 }
