@@ -1,4 +1,4 @@
-import { FluroDefinition } from '../types'
+import type { FluroDefinition } from '../types'
 import { extractDefinition } from '../lib'
 
 export type FluroContactDefinition = FluroDefinition

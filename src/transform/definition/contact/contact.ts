@@ -1,5 +1,5 @@
-import { FluroContactDefinition } from '../../../extract/definition/contact'
-import { Mapper } from '../../../load/types'
+import type { FluroContactDefinition } from '../../../extract/definition/contact'
+import type { Mapper } from '../../../load/types'
 
 export function transform(_mapper: Mapper, value: FluroContactDefinition) {
   return {

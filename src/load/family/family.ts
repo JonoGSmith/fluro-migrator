@@ -1,6 +1,7 @@
 import { omit } from 'lodash'
-import { GET, POST, PUT, components } from '../client'
-import { MapperObject } from '../types'
+import type { components } from '../client';
+import { GET, POST, PUT } from '../client'
+import type { MapperObject } from '../types'
 
 let GroupTypeId: number
 export type RockFamily = Omit<

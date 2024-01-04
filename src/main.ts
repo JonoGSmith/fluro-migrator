@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { tuples } from './tuples'
-import { Mapper } from './load/types'
+import type { Mapper } from './load/types'
 import fs from 'node:fs/promises'
 import path from 'path'
 import { SingleBar } from 'cli-progress'

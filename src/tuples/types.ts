@@ -1,6 +1,6 @@
-import { ExtractFn } from '../extract/types'
-import { LoadFn } from '../load/types'
-import { TransformFn } from '../transform/types'
+import type { ExtractFn } from '../extract/types'
+import type { LoadFn } from '../load/types'
+import type { TransformFn } from '../transform/types'
 
 export type ETLTuple<TInput, TOutput> = [
   name: string,

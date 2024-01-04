@@ -1,7 +1,7 @@
 import { transform } from '.'
-import { FluroContact } from '../../extract/contact'
-import { RockContact } from '../../load/contact'
-import { Mapper } from '../../load/types'
+import type { FluroContact } from '../../extract/contact'
+import type { RockContact } from '../../load/contact'
+import type { Mapper } from '../../load/types'
 
 describe('contact', () => {
   describe('translate', () => {

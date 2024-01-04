@@ -1,4 +1,4 @@
-import { Realm } from '../types'
+import type { Realm } from '../types'
 
 interface Address {
   addressLine1: string

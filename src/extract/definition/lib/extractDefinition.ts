@@ -1,6 +1,7 @@
 import { client } from '../../client'
-import { ExtractIterator, PAGE_SIZE } from '../../types'
-import { FluroDefinition } from '../types'
+import type { ExtractIterator} from '../../types';
+import { PAGE_SIZE } from '../../types'
+import type { FluroDefinition } from '../types'
 
 export function extractDefinition(parentType: string) {
   return async function extract(): Promise<

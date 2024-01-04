@@ -1,5 +1,6 @@
-import { GET, POST, components } from '../../client'
-import { MapperObject } from '../../types'
+import type { components } from '../../client';
+import { GET, POST } from '../../client'
+import type { MapperObject } from '../../types'
 import { omit } from 'lodash'
 
 export type RockContactDefinition =

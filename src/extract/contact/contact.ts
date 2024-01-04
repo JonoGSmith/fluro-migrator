@@ -1,6 +1,7 @@
 import type { FluroContact } from '.'
 import { client } from '../client'
-import { ExtractIterator, PAGE_SIZE } from '../types'
+import type { ExtractIterator} from '../types';
+import { PAGE_SIZE } from '../types'
 
 export async function extract(): Promise<
   AsyncIterator<ExtractIterator<FluroContact>>

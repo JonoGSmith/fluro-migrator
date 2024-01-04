@@ -1,6 +1,6 @@
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
-import { Mapper } from '../../load/types'
+import type { Mapper } from '../../load/types'
 
 function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
   switch (gender) {

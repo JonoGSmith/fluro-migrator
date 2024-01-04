@@ -1,1 +1,1 @@
-export { load } from './family'
+export { load, RockFamily } from './family'

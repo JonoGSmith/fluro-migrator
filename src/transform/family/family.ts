@@ -1,6 +1,6 @@
-import { FluroFamily } from '../../extract/family'
-import { RockFamily } from '../../load/family/family'
-import { Mapper } from '../../load/types'
+import type { FluroFamily } from '../../extract/family'
+import type { RockFamily } from '../../load/family/family'
+import type { Mapper } from '../../load/types'
 
 export function transform(_mapper: Mapper, family: FluroFamily): RockFamily {
   return {

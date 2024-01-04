@@ -1,4 +1,4 @@
-import { Realm } from '../types'
+import type { Realm } from '../types'
 
 export interface FluroContact {
   _id: string
