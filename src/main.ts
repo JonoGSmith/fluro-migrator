@@ -1,7 +1,8 @@
 import 'dotenv/config'
 import { tuples } from './tuples'
 import type { Mapper } from './load/types'
-import fs from 'node:fs/promises'
+import fs from 'fs'
+import fsPromise from 'node:fs/promises'
 import path from 'path'
 import { SingleBar } from 'cli-progress'
 import colors from 'ansi-colors'
@@ -47,12 +48,7 @@ async function main() {
 
       mapper[name] = Object.assign(mapper[name], ...tmpMapper)
 
-      await fs.writeFile(
-        path.join(__dirname, '..', 'tmp', `${name}Mapper.json`),
-        JSON.stringify(mapper[name], null, 2),
-        { flag: 'w' }
-      )
-
+      saveMapper(name, JSON.stringify(mapper[name], null, 2))
       result = await iterator.next()
     }
     progress.stop()
@@ -63,11 +59,11 @@ async function loadMapper() {
   const mapper: Mapper = {}
 
   const walk = async (dir: string, filelist: string[] = []) => {
-    const files = await fs.readdir(dir)
+    const files = await fsPromise.readdir(dir)
 
     for (const file of files) {
       const filepath = path.join(dir, file)
-      const stat = await fs.stat(filepath)
+      const stat = await fsPromise.stat(filepath)
 
       if (stat.isDirectory()) {
         filelist = await walk(filepath, filelist)
@@ -84,7 +80,7 @@ async function loadMapper() {
   )
 
   for (const file of files) {
-    const cache = await fs.readFile(
+    const cache = await fsPromise.readFile(
       path.join(__dirname, '..', 'tmp', 'mapper', `${file}.json`),
       'utf8'
     )
@@ -92,6 +88,22 @@ async function loadMapper() {
   }
 
   return mapper
+}
+
+async function saveMapper(name: string, contents: string) {
+  if (name.includes('/')) {
+    const pathWithoutFile = name.split('/')
+    pathWithoutFile.pop()
+    const dir = path.join(__dirname, '..', 'tmp', 'mapper', ...pathWithoutFile)
+
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+  }
+
+  await fsPromise.writeFile(
+    path.join(__dirname, '..', 'tmp', 'mapper', `${name}.json`),
+    contents,
+    { flag: 'w' }
+  )
 }
 
 main()
