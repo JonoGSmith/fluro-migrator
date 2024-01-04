@@ -48,7 +48,7 @@ async function main() {
 
       mapper[name] = Object.assign(mapper[name], ...tmpMapper)
 
-      saveMapper(name, JSON.stringify(mapper[name], null, 2))
+      await saveMapper(name, JSON.stringify(mapper[name], null, 2))
       result = await iterator.next()
     }
     progress.stop()
@@ -58,7 +58,11 @@ async function main() {
 async function loadMapper() {
   const mapper: Mapper = {}
 
-  const walk = async (dir: string, filelist: string[] = []) => {
+  const walk = async (
+    base: string,
+    dir: string = base,
+    filelist: string[] = []
+  ) => {
     const files = await fsPromise.readdir(dir)
 
     for (const file of files) {
@@ -66,18 +70,16 @@ async function loadMapper() {
       const stat = await fsPromise.stat(filepath)
 
       if (stat.isDirectory()) {
-        filelist = await walk(filepath, filelist)
+        filelist = await walk(base, filepath, filelist)
       } else {
-        filelist.push(file)
+        filelist.push(filepath.replace(`${base}/`, '').replace('.json', ''))
       }
     }
 
     return filelist
   }
 
-  const files = (await walk(path.join(__dirname, '..', 'tmp', 'mapper'))).map(
-    (name) => name.replace('.json', '')
-  )
+  const files = await walk(path.join(__dirname, '..', 'tmp', 'mapper'))
 
   for (const file of files) {
     const cache = await fsPromise.readFile(

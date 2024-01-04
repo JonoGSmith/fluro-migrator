@@ -1,6 +1,6 @@
 import type { FluroDefinition } from '../types'
 import { extractDefinition } from '../lib'
 
-export type FluroTeamDefinition = FluroDefinition
+export type FluroDefinitionTeam = FluroDefinition
 
-export const extract = extractDefinition('team')
+export const extract = extractDefinition('team', true)
