@@ -10,7 +10,7 @@ describe('contact', () => {
       firstName: 'John',
       lastName: 'Smith',
       gender: 'male',
-      email: 'example@example.com'
+      emails: { 0: 'example@example.com' }
     } as unknown as FluroContact
     const rockContact: RockContact = {
       BirthMonth: undefined,
