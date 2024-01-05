@@ -23,7 +23,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "folder-path-color.folders",
+        "VisbyDev.folder-path-color",
         "dbaeumer.vscode-eslint",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",

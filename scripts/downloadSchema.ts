@@ -60,4 +60,4 @@ async function downloadSchema() {
   fs.writeFileSync('./swagger.json', JSON.stringify(req.data, null, 2))
 }
 
-downloadSchema()
+void downloadSchema()

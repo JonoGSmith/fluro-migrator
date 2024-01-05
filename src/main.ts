@@ -111,4 +111,4 @@ async function saveCache(name: string, contents: string) {
   )
 }
 
-main()
+void main()
