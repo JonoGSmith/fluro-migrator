@@ -7,7 +7,7 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
   switch (gender) {
     case 'male':
       return 'Male'
-    case 'Female':
+    case 'female':
       return 'Female'
     default:
     case 'unknown':
@@ -30,7 +30,7 @@ export function transform(cache: Cache, value: FluroContact): RockContact {
     BirthYear: value.dobYear,
     IsDeceased: value.deceased,
     DeceasedDate: value.deceasedDate,
-    Email: value?.emails?.[0] ?? '',
+    Email: value?.emails?.[0],
     FirstName: value.firstName,
     LastName: value.lastName,
     ForeignKey: value._id,
