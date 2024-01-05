@@ -3,7 +3,12 @@ import type { components } from '../../client'
 import { GET, POST, PUT, RockApiError } from '../../client'
 import type { CacheObject } from '../../types'
 
-export type RockDefinitionTeam = components['schemas']['Rock.Model.GroupType']
+export type RockDefinitionTeam =
+  components['schemas']['Rock.Model.GroupType'] & {
+    cache?: {
+      definitionName?: string
+    }
+  }
 
 export async function load(value: RockDefinitionTeam): Promise<CacheObject> {
   const { data, error } = await GET('/api/GroupTypes', {
