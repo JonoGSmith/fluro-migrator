@@ -79,7 +79,10 @@ async function loadMapper() {
     return filelist
   }
 
-  const files = await walk(path.join(__dirname, '..', 'tmp', 'mapper'))
+  const basePath = path.join(__dirname, '..', 'tmp', 'mapper')
+  if (!fs.existsSync(basePath)) fs.mkdirSync(basePath, { recursive: true })
+
+  const files = await walk(basePath)
 
   for (const file of files) {
     const cache = await fsPromise.readFile(

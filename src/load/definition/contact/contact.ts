@@ -1,5 +1,5 @@
 import type { components } from '../../client'
-import { GET, PUT, POST } from '../../client'
+import { GET, PUT, POST, RockApiError } from '../../client'
 import type { MapperObject } from '../../types'
 import { omit } from 'lodash'
 
@@ -19,7 +19,7 @@ export async function load(
   value: RockDefinitionContact
 ): Promise<MapperObject> {
   if (DefinedTypeId === undefined) {
-    const { data } = await GET('/api/DefinedTypes', {
+    const { data, error } = await GET('/api/DefinedTypes', {
       params: {
         query: {
           $filter: `Name eq 'Connection Status'`,
@@ -27,12 +27,14 @@ export async function load(
         }
       }
     })
+    if (error != null) throw new RockApiError(error)
+
     if (data?.[0].Id == null) throw new Error("Couldn't find Family GroupType")
 
     DefinedTypeId = data?.[0].Id
   }
 
-  const { data } = await GET('/api/DefinedValues', {
+  const { data, error } = await GET('/api/DefinedValues', {
     params: {
       query: {
         $filter: `DefinedTypeId eq ${DefinedTypeId} and (ForeignKey eq '${value.ForeignKey}') or (ForeignKey eq null and Value eq '${value.Value}')`,
@@ -40,6 +42,8 @@ export async function load(
       }
     }
   })
+  if (error != null) throw new RockApiError(error)
+
   if (data != null && data.length > 0 && data[0].Id != null) {
     const { error } = await PUT('/api/DefinedValues/{id}', {
       params: {
@@ -61,9 +65,11 @@ export async function load(
       data: value.mapper
     }
   } else {
-    const { data } = await POST('/api/DefinedValues', {
+    const { data, error } = await POST('/api/DefinedValues', {
       body: omit({ ...value, DefinedTypeId }, 'mapper')
     })
+    if (error != null) throw new RockApiError(error)
+
     return {
       rockId: data as unknown as number,
       data: value.mapper

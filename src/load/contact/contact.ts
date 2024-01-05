@@ -1,6 +1,6 @@
 import { omit } from 'lodash'
 import type { components } from '../client'
-import { GET, POST, PUT } from '../client'
+import { GET, POST, PUT, RockApiError } from '../client'
 import type { MapperObject } from '../types'
 
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
@@ -8,7 +8,7 @@ export type RockContact = components['schemas']['Rock.Model.Person'] & {
 }
 
 export async function load(value: RockContact): Promise<MapperObject> {
-  const { data } = await GET('/api/People', {
+  const { data, error } = await GET('/api/People', {
     params: {
       query: {
         $filter: `ForeignKey eq '${value.ForeignKey}'`,
@@ -16,12 +16,14 @@ export async function load(value: RockContact): Promise<MapperObject> {
       }
     }
   })
+  if (error != null) throw new RockApiError(error)
+
   if (data != null && data.length > 0 && data[0].Id != null) {
     // person exists
 
     // add existing person to family if primary family id exists
-    if (value.PrimaryFamilyId != null)
-      await POST('/api/People/AddExistingPersonToFamily', {
+    if (value.PrimaryFamilyId != null) {
+      const { error } = await POST('/api/People/AddExistingPersonToFamily', {
         params: {
           query: {
             personId: data[0].Id,
@@ -31,6 +33,8 @@ export async function load(value: RockContact): Promise<MapperObject> {
           }
         }
       })
+      if (error != null) throw new RockApiError(error)
+    }
 
     const { error } = await PUT('/api/People/{id}', {
       params: {
@@ -40,17 +44,14 @@ export async function load(value: RockContact): Promise<MapperObject> {
       },
       body: omit({ ...value, Id: data[0].Id }, ['ForeignKey', 'FamilyRole'])
     })
-    if (error != null)
-      throw new Error(
-        (error as { Message: string })?.Message ?? 'Unknown Error'
-      )
+    if (error != null) throw new RockApiError(error)
     return { rockId: data[0].Id }
   } else {
     // person does not exist
 
     if (value.PrimaryFamilyId != null) {
       // add new person to family if primary family id exists
-      const { data } = await POST(
+      const { data, error } = await POST(
         '/api/People/AddNewPersonToFamily/{familyId}',
         {
           params: {
@@ -64,12 +65,14 @@ export async function load(value: RockContact): Promise<MapperObject> {
           body: omit(value, ['FamilyRole'])
         }
       )
+      if (error != null) throw new RockApiError(error)
       return { rockId: data as unknown as number }
     } else {
       // create new person if primary family id does not exist
-      const { data } = await POST('/api/People', {
+      const { data, error } = await POST('/api/People', {
         body: omit(value, ['FamilyRole'])
       })
+      if (error != null) throw new RockApiError(error)
       return { rockId: data as unknown as number }
     }
   }

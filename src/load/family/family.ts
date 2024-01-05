@@ -1,6 +1,6 @@
 import { omit } from 'lodash'
-import type { components } from '../client';
-import { GET, POST, PUT } from '../client'
+import type { components } from '../client'
+import { GET, POST, PUT, RockApiError } from '../client'
 import type { MapperObject } from '../types'
 
 let GroupTypeId: number
@@ -11,7 +11,7 @@ export type RockFamily = Omit<
 
 export async function load(value: RockFamily): Promise<MapperObject> {
   if (GroupTypeId === undefined) {
-    const { data } = await GET('/api/GroupTypes', {
+    const { data, error } = await GET('/api/GroupTypes', {
       params: {
         query: {
           $filter: `Name eq 'Family'`,
@@ -19,11 +19,13 @@ export async function load(value: RockFamily): Promise<MapperObject> {
         }
       }
     })
+    if (error != null) throw new RockApiError(error)
+
     if (data?.[0].Id == null) throw new Error("Couldn't find Family GroupType")
 
     GroupTypeId = data?.[0].Id
   }
-  const { data: families } = await GET('/api/Groups', {
+  const { data, error } = await GET('/api/Groups', {
     params: {
       query: {
         $filter: `ForeignKey eq '${value.ForeignKey}'`,
@@ -31,23 +33,28 @@ export async function load(value: RockFamily): Promise<MapperObject> {
       }
     }
   })
-  if (families != null && families.length > 0 && families[0].Id != null) {
-    await PUT('/api/Groups/{id}', {
+  if (error != null) throw new RockApiError(error)
+
+  if (data != null && data.length > 0 && data[0].Id != null) {
+    const { error } = await PUT('/api/Groups/{id}', {
       params: {
         path: {
-          id: families[0].Id
+          id: data[0].Id
         }
       },
-      body: omit({ ...value, GroupTypeId }, ['ForeignKey'])
+      body: omit({ ...value, Id: data[0].Id, GroupTypeId }, ['ForeignKey'])
     })
-    return { rockId: families[0].Id }
+    if (error != null) throw new RockApiError(error)
+    return { rockId: data[0].Id }
   } else {
-    const { data } = await POST('/api/Groups', {
+    const { data, error } = await POST('/api/Groups', {
       body: {
         ...value,
         GroupTypeId
       }
     })
+    if (error != null) throw new RockApiError(error)
+
     return { rockId: data as unknown as number }
   }
 }
