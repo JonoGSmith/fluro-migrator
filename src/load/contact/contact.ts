@@ -1,13 +1,13 @@
 import { omit } from 'lodash'
 import type { components } from '../client'
 import { GET, POST, PUT, RockApiError } from '../client'
-import type { MapperObject } from '../types'
+import type { CacheObject } from '../types'
 
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
   FamilyRole: number
 }
 
-export async function load(value: RockContact): Promise<MapperObject> {
+export async function load(value: RockContact): Promise<CacheObject> {
   const { data, error } = await GET('/api/People', {
     params: {
       query: {

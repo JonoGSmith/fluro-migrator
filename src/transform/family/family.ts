@@ -1,8 +1,8 @@
 import type { FluroFamily } from '../../extract/family'
 import type { RockFamily } from '../../load/family/family'
-import type { Mapper } from '../../load/types'
+import type { Cache } from '../../load/types'
 
-export function transform(_mapper: Mapper, family: FluroFamily): RockFamily {
+export function transform(_cache: Cache, family: FluroFamily): RockFamily {
   return {
     IsSystem: false,
     IsSecurityRole: false,

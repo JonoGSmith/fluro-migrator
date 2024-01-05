@@ -1,14 +1,14 @@
-export interface MapperObject {
+export interface CacheObject {
   rockId: number
   data?: {
     [key: string]: unknown
   }
 }
-export interface Mapper {
+export interface Cache {
   [tupleName: string]: {
-    [fluroId: string]: MapperObject
+    [fluroId: string]: CacheObject
   }
 }
 export interface LoadFn<T> {
-  (value: T): Promise<MapperObject>
+  (value: T): Promise<CacheObject>
 }

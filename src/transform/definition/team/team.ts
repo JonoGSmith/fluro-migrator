@@ -1,9 +1,9 @@
 import type { FluroDefinitionTeam } from '../../../extract/definition/team'
 import type { RockDefinitionTeam } from '../../../load/definition/team'
-import type { Mapper } from '../../../load/types'
+import type { Cache } from '../../../load/types'
 
 export function transform(
-  _mapper: Mapper,
+  _cache: Cache,
   definitionTeam: FluroDefinitionTeam
 ): RockDefinitionTeam {
   return {

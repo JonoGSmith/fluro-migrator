@@ -1,9 +1,9 @@
 import type { FluroDefinitionContact } from '../../../extract/definition/contact'
-import type { Mapper } from '../../../load/types'
+import type { Cache } from '../../../load/types'
 import type { RockDefinitionContact } from '../../../load/definition/contact'
 
 export function transform(
-  _mapper: Mapper,
+  _cache: Cache,
   value: FluroDefinitionContact
 ): RockDefinitionContact {
   return {
@@ -15,7 +15,7 @@ export function transform(
     CreatedDateTime: value.created,
     ModifiedDateTime: value.updated,
     ForeignKey: value._id,
-    mapper: {
+    cache: {
       definitionName: value.definitionName
     }
   }

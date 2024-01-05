@@ -1,7 +1,7 @@
 import { find } from 'lodash'
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
-import type { Mapper } from '../../load/types'
+import type { Cache } from '../../load/types'
 
 function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
   switch (gender) {
@@ -18,9 +18,9 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
 /**
  * transforms a fluro api contact object to a rock contact object
  */
-export function transform(mapper: Mapper, contact: FluroContact): RockContact {
+export function transform(cache: Cache, contact: FluroContact): RockContact {
   const ConnectionStatusValueId = find(
-    mapper['definition/contact'],
+    cache['definition/contact'],
     (val) => val.data?.definitionName === contact.definition
   )?.rockId
 
@@ -38,7 +38,7 @@ export function transform(mapper: Mapper, contact: FluroContact): RockContact {
     ConnectionStatusValueId,
     PrimaryFamilyId:
       contact.family != null
-        ? mapper['family'][contact.family._id]?.rockId
+        ? cache['family'][contact.family._id]?.rockId
         : undefined,
     FamilyRole:
       contact?.householdRole != null && contact.householdRole === 'child'

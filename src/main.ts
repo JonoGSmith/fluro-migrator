@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { tuples } from './tuples'
-import type { Mapper } from './load/types'
+import type { Cache } from './load/types'
 import fs from 'fs'
 import fsPromise from 'node:fs/promises'
 import path from 'path'
@@ -8,10 +8,10 @@ import { SingleBar } from 'cli-progress'
 import colors from 'ansi-colors'
 
 async function main() {
-  const mapper: Mapper = await loadMapper()
+  const cache: Cache = await loadCache()
 
   for (const [name, extract, transform, load] of tuples) {
-    if (mapper[name] == null) mapper[name] = {}
+    if (cache[name] == null) cache[name] = {}
 
     // create extract iterator
     const iterator = await extract()
@@ -31,32 +31,32 @@ async function main() {
     progress.start(result.value.max, 0)
 
     while (!result.done) {
-      const tmpMapper = await Promise.all(
+      const tmpCache = await Promise.all(
         result.value.collection.map(async (value) => {
-          if (mapper[name][value._id] != null) {
+          if (cache[name][value._id] != null) {
             progress.increment()
-            return { [value._id]: mapper[name][value._id] }
+            return { [value._id]: cache[name][value._id] }
           } else {
-            const mapperObject = await load(
-              transform(mapper, value as never) as never
+            const cacheObject = await load(
+              transform(cache, value as never) as never
             )
             progress.increment()
-            return { [value._id]: mapperObject }
+            return { [value._id]: cacheObject }
           }
         })
       )
 
-      mapper[name] = Object.assign(mapper[name], ...tmpMapper)
+      cache[name] = Object.assign(cache[name], ...tmpCache)
 
-      await saveMapper(name, JSON.stringify(mapper[name], null, 2))
+      await saveCache(name, JSON.stringify(cache[name], null, 2))
       result = await iterator.next()
     }
     progress.stop()
   }
 }
 
-async function loadMapper() {
-  const mapper: Mapper = {}
+async function loadCache() {
+  const cache: Cache = {}
 
   const walk = async (
     base: string,
@@ -79,33 +79,33 @@ async function loadMapper() {
     return filelist
   }
 
-  const basePath = path.join(__dirname, '..', 'tmp', 'mapper')
+  const basePath = path.join(__dirname, '..', 'tmp', 'cache')
   if (!fs.existsSync(basePath)) fs.mkdirSync(basePath, { recursive: true })
 
   const files = await walk(basePath)
 
   for (const file of files) {
-    const cache = await fsPromise.readFile(
-      path.join(__dirname, '..', 'tmp', 'mapper', `${file}.json`),
+    const cacheFile = await fsPromise.readFile(
+      path.join(__dirname, '..', 'tmp', 'cache', `${file}.json`),
       'utf8'
     )
-    mapper[file] = JSON.parse(cache)
+    cache[file] = JSON.parse(cacheFile)
   }
 
-  return mapper
+  return cache
 }
 
-async function saveMapper(name: string, contents: string) {
+async function saveCache(name: string, contents: string) {
   if (name.includes('/')) {
     const pathWithoutFile = name.split('/')
     pathWithoutFile.pop()
-    const dir = path.join(__dirname, '..', 'tmp', 'mapper', ...pathWithoutFile)
+    const dir = path.join(__dirname, '..', 'tmp', 'cache', ...pathWithoutFile)
 
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
   }
 
   await fsPromise.writeFile(
-    path.join(__dirname, '..', 'tmp', 'mapper', `${name}.json`),
+    path.join(__dirname, '..', 'tmp', 'cache', `${name}.json`),
     contents,
     { flag: 'w' }
   )

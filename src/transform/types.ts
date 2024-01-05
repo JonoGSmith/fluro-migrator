@@ -1,5 +1,5 @@
-import type { Mapper } from '../load/types'
+import type { Cache } from '../load/types'
 
 export interface TransformFn<TInput, TOutput> {
-  (mapper: Mapper, value: TInput): TOutput
+  (cache: Cache, value: TInput): TOutput
 }

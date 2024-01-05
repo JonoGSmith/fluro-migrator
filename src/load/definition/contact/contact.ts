@@ -1,6 +1,6 @@
 import type { components } from '../../client'
 import { GET, PUT, POST, RockApiError } from '../../client'
-import type { MapperObject } from '../../types'
+import type { CacheObject } from '../../types'
 import { omit } from 'lodash'
 
 let DefinedTypeId: number
@@ -8,16 +8,14 @@ export type RockDefinitionContact = Omit<
   components['schemas']['Rock.Model.DefinedValue'],
   'DefinedTypeId'
 > & {
-  mapper: MapperObject['data']
+  cache: CacheObject['data']
 }
 
 export let allExistingRockDefinitions:
   | { data: Array<RockDefinitionContact> }
   | undefined
 
-export async function load(
-  value: RockDefinitionContact
-): Promise<MapperObject> {
+export async function load(value: RockDefinitionContact): Promise<CacheObject> {
   if (DefinedTypeId === undefined) {
     const { data, error } = await GET('/api/DefinedTypes', {
       params: {
@@ -53,7 +51,7 @@ export async function load(
       },
       body: omit({ ...value, Id: data[0].Id, DefinedTypeId }, [
         'ForeignKey',
-        'mapper'
+        'cache'
       ])
     })
     if (error != null)
@@ -62,17 +60,17 @@ export async function load(
       )
     return {
       rockId: data[0].Id,
-      data: value.mapper
+      data: value.cache
     }
   } else {
     const { data, error } = await POST('/api/DefinedValues', {
-      body: omit({ ...value, DefinedTypeId }, 'mapper')
+      body: omit({ ...value, DefinedTypeId }, 'cache')
     })
     if (error != null) throw new RockApiError(error)
 
     return {
       rockId: data as unknown as number,
-      data: value.mapper
+      data: value.cache
     }
   }
 }
