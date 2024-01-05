@@ -1,6 +1,22 @@
+import { extractFromFluro } from '../../lib'
 import type { FluroDefinition } from '../types'
-import { extractDefinition } from '../lib'
 
 export type FluroDefinitionTeam = FluroDefinition
 
-export const extract = extractDefinition('team', true)
+export const extract = extractFromFluro<FluroDefinitionTeam>({
+  contentType: 'definition',
+  filterBody: {
+    allDefinitions: true,
+    includeArchived: true,
+    searchInheritable: true,
+    filter: {
+      filters: [
+        {
+          comparator: '==',
+          key: 'parentType',
+          value: 'team'
+        }
+      ]
+    }
+  }
+})

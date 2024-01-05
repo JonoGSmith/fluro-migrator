@@ -1,1 +1,0 @@
-export { extractDefinition } from './extractDefinition'
