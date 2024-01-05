@@ -5,9 +5,7 @@ import type { CacheObject } from '../../types'
 
 export type RockDefinitionTeam =
   components['schemas']['Rock.Model.GroupType'] & {
-    cache?: {
-      definitionName?: string
-    }
+    cache: CacheObject['data']
   }
 
 export async function load(value: RockDefinitionTeam): Promise<CacheObject> {
