@@ -9,13 +9,14 @@ describe('contact', () => {
       _id: '1',
       firstName: 'John',
       lastName: 'Smith',
-      gender: 'male'
+      gender: 'male',
+      email: 'example@example.com'
     } as unknown as FluroContact
     const rockContact: RockContact = {
       BirthMonth: undefined,
       BirthYear: undefined,
       DeceasedDate: undefined,
-      Email: undefined,
+      Email: 'example@example.com',
       FirstName: 'John',
       FamilyRole: 3,
       ForeignKey: '1',
