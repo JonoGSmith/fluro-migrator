@@ -12,7 +12,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
     params: {
       query: {
         $filter: `ForeignKey eq '${value.ForeignKey}'`,
-        $select: 'Id'
+        $select: 'Id, PrimaryFamilyId'
       }
     }
   })
