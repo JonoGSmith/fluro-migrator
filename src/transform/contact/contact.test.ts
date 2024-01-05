@@ -15,7 +15,7 @@ describe('contact', () => {
       BirthMonth: undefined,
       BirthYear: undefined,
       DeceasedDate: undefined,
-      Email: '',
+      Email: undefined,
       FirstName: 'John',
       FamilyRole: 3,
       ForeignKey: '1',
