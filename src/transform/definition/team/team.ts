@@ -4,19 +4,22 @@ import type { Cache } from '../../../load/types'
 
 export function transform(
   _cache: Cache,
-  definitionTeam: FluroDefinitionTeam
+  value: FluroDefinitionTeam
 ): RockDefinitionTeam {
   return {
     IsSystem: false,
-    ForeignKey: definitionTeam._id,
-    Name: definitionTeam.title,
-    Description: definitionTeam.firstLine,
-    CreatedDateTime: definitionTeam.created,
-    ModifiedDateTime: definitionTeam.updated,
+    ForeignKey: value._id,
+    Name: value.title,
+    Description: value.firstLine,
+    CreatedDateTime: value.created,
+    ModifiedDateTime: value.updated,
     GroupTerm: 'Group',
     GroupMemberTerm: 'Member',
     IsCapacityRequired: false,
     ShowAdministrator: true,
-    Order: 0
+    Order: 0,
+    cache: {
+      definitionName: value.definitionName
+    }
   }
 }

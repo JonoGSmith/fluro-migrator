@@ -18,31 +18,29 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
 /**
  * transforms a fluro api contact object to a rock contact object
  */
-export function transform(cache: Cache, contact: FluroContact): RockContact {
+export function transform(cache: Cache, value: FluroContact): RockContact {
   const ConnectionStatusValueId = find(
     cache['definition/contact'],
-    (val) => val.data?.definitionName === contact.definition
+    (val) => val.data?.definitionName === value.definition
   )?.rockId
 
   return {
     IsSystem: false,
-    BirthMonth: contact.dobMonth,
-    BirthYear: contact.dobYear,
-    IsDeceased: contact.deceased,
-    DeceasedDate: contact.deceasedDate,
-    Email: contact?.emails?.[0] ?? '',
-    FirstName: contact.firstName,
-    LastName: contact.lastName,
-    ForeignKey: contact._id,
-    Gender: transformGender(contact.gender),
+    BirthMonth: value.dobMonth,
+    BirthYear: value.dobYear,
+    IsDeceased: value.deceased,
+    DeceasedDate: value.deceasedDate,
+    Email: value?.emails?.[0] ?? '',
+    FirstName: value.firstName,
+    LastName: value.lastName,
+    ForeignKey: value._id,
+    Gender: transformGender(value.gender),
     ConnectionStatusValueId,
     PrimaryFamilyId:
-      contact.family != null
-        ? cache['family'][contact.family._id]?.rockId
+      value.family != null
+        ? cache['family'][value.family._id]?.rockId
         : undefined,
     FamilyRole:
-      contact?.householdRole != null && contact.householdRole === 'child'
-        ? 4
-        : 3
+      value?.householdRole != null && value.householdRole === 'child' ? 4 : 3
   }
 }
