@@ -1,0 +1,33 @@
+{
+  "overrides": [
+    {
+      "files": [
+        "scripts/downloadSchema.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "warn"
+      }
+    },
+    {
+      "files": [
+        "src/extract/lib/extractFromFluro.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "warn",
+        "@typescript-eslint/no-unsafe-call": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "warn"
+      }
+    },
+    {
+      "files": [
+        "src/main.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unsafe-argument": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "warn"
+      }
+    }
+  ]
+}
