@@ -8,7 +8,7 @@ const client = axios.create({
   headers: { 'Authorization-Token': `${process.env.ROCK_API_TOKEN}` }
 })
 
-async function downloadSchema() {
+async function downloadSchema(): Promise<void> {
   const REST_CONTROLLER_NAMES = [
     'Groups',
     'GroupTypes',
@@ -22,9 +22,12 @@ async function downloadSchema() {
 
   const definitionsAndPathsArr = await Promise.all(
     REST_CONTROLLER_NAMES.map(async (name: string) => {
-      const schema = await client.get(`/doc/v1?controllerName=${name}`)
-      console.log(name)
-      return { definitions: schema.data.definitions, paths: schema.data.paths }
+      const { data } = await client.get<{
+        definitions: { [path: string]: unknown }
+        paths: { [path: string]: unknown }
+      }>(`/doc/v1?controllerName=${name}`)
+      console.log(name, data)
+      return { definitions: data.definitions, paths: data.paths }
     })
   )
 

@@ -25,18 +25,24 @@ export function extractFromFluro<T>({
   contentType,
   filterBody = {},
   multipleBody = {}
-}: ExtractFromFluroOptions) {
+}: ExtractFromFluroOptions): () => Promise<AsyncIterator<ExtractIterator<T>>> {
   return async function extract(): Promise<AsyncIterator<ExtractIterator<T>>> {
-    const filterReq = await client.post(`/content/${contentType}/filter`, {
-      ...filterBody
-    })
+    const filterReq = await client.post<{ _id: string }[]>(
+      `/content/${contentType}/filter`,
+      {
+        ...filterBody
+      }
+    )
     const allIds = filterReq.data.map(({ _id }: { _id: string }) => _id)
     const max = allIds.length
 
     return {
-      next: async () => {
+      next: async (): Promise<{
+        value: { collection: T[]; max: number }
+        done: boolean
+      }> => {
         const ids = allIds.splice(0, PAGE_SIZE)
-        const req = await client.post(`/content/${contentType}/multiple`, {
+        const req = await client.post<T[]>(`/content/${contentType}/multiple`, {
           ...multipleBody,
           ids,
           limit: PAGE_SIZE

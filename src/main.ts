@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { tuples } from './tuples'
-import type { Cache } from './load/types'
+import type { Cache, CacheObject } from './load/types'
 import fs from 'fs'
 import fsPromise from 'node:fs/promises'
 import path from 'path'
@@ -51,7 +51,7 @@ const args = parse<CommandLineArguments>(
   }
 )
 
-async function main() {
+async function main(): Promise<void> {
   const cache: Cache = await loadCache()
 
   for (const [name, extract, transform, load] of tuples) {
@@ -77,7 +77,7 @@ async function main() {
       hideCursor: true
     })
 
-    progress.start(result.value.max, 0)
+    progress.start((result.value as { max: number }).max, 0)
 
     while (!result.done) {
       const tmpCache = await Promise.all(
@@ -95,7 +95,9 @@ async function main() {
         })
       )
 
-      cache[name] = Object.assign(cache[name], ...tmpCache)
+      cache[name] = Object.assign(cache[name], ...tmpCache) as {
+        [fluroId: string]: CacheObject
+      }
 
       await saveCache(name, JSON.stringify(cache[name], null, 2))
       result = await iterator.next()
@@ -104,14 +106,14 @@ async function main() {
   }
 }
 
-async function loadCache() {
+async function loadCache(): Promise<Cache> {
   const cache: Cache = {}
 
   const walk = async (
     base: string,
     dir: string = base,
     filelist: string[] = []
-  ) => {
+  ): Promise<string[]> => {
     const files = await fsPromise.readdir(dir)
 
     for (const file of files) {
@@ -138,13 +140,15 @@ async function loadCache() {
       path.join(__dirname, '..', 'tmp', 'cache', `${file}.json`),
       'utf8'
     )
-    cache[file] = JSON.parse(cacheFile)
+    cache[file] = JSON.parse(cacheFile) as {
+      [fluroId: string]: CacheObject
+    }
   }
 
   return cache
 }
 
-async function saveCache(name: string, contents: string) {
+async function saveCache(name: string, contents: string): Promise<void> {
   if (name.includes('/')) {
     const pathWithoutFile = name.split('/')
     pathWithoutFile.pop()
