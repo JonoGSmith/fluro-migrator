@@ -58,10 +58,7 @@ export async function load(value: RockDefinitionContact): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id, DefinedTypeId }, [
-        'ForeignKey',
-        'cache'
-      ])
+      body: omit({ ...value, Id: data[0].Id, DefinedTypeId }, ['cache'])
     })
     if (error != null)
       throw new Error(

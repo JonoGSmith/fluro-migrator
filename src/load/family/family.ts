@@ -1,4 +1,3 @@
-import { omit } from 'lodash'
 import f from 'odata-filter-builder'
 
 import type { components } from '../client'
@@ -44,7 +43,7 @@ export async function load(value: RockFamily): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id, GroupTypeId }, ['ForeignKey'])
+      body: { ...value, Id: data[0].Id, GroupTypeId }
     })
     if (error != null) throw new RockApiError(error)
     return { rockId: data[0].Id }

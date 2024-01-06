@@ -48,7 +48,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id }, ['ForeignKey', 'FamilyRole'])
+      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole'])
     })
     if (error != null) throw new RockApiError(error)
     return {

@@ -1,4 +1,3 @@
-import { omit } from 'lodash'
 import f from 'odata-filter-builder'
 
 import type { components } from '../../client'
@@ -35,7 +34,7 @@ export async function load(value: RockDefinitionTeam): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit(value, ['ForeignKey'])
+      body: value
     })
     return { rockId: data[0].Id, data: value.cache }
   } else {
