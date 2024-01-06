@@ -1,4 +1,6 @@
 import { omit } from 'lodash'
+import f from 'odata-filter-builder'
+
 import type { components } from '../client'
 import { GET, POST, PUT, RockApiError } from '../client'
 import type { CacheObject } from '../types'
@@ -14,7 +16,7 @@ export async function load(value: RockFamily): Promise<CacheObject> {
     const { data, error } = await GET('/api/GroupTypes', {
       params: {
         query: {
-          $filter: `Name eq 'Family'`,
+          $filter: f().eq('Name', 'Family').toString(),
           $select: 'Id'
         }
       }
@@ -28,7 +30,7 @@ export async function load(value: RockFamily): Promise<CacheObject> {
   const { data, error } = await GET('/api/Groups', {
     params: {
       query: {
-        $filter: `ForeignKey eq '${value.ForeignKey}'`,
+        $filter: f().eq('ForeignKey', value.ForeignKey).toString(),
         $select: 'Id'
       }
     }

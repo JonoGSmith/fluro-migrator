@@ -1,7 +1,8 @@
-import { transform } from '.'
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
 import type { Cache } from '../../load/types'
+
+import { transform } from '.'
 
 describe('contact', () => {
   describe('translate', () => {

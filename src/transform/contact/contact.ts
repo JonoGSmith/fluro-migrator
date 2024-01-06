@@ -1,4 +1,5 @@
 import { find } from 'lodash'
+
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
 import type { Cache } from '../../load/types'

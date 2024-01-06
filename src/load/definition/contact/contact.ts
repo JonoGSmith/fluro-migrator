@@ -1,7 +1,9 @@
-import type { components } from '../../client'
-import { GET, PUT, POST, RockApiError } from '../../client'
-import type { CacheObject } from '../../types'
 import { omit } from 'lodash'
+import f from 'odata-filter-builder'
+
+import type { components } from '../../client'
+import { GET, POST, PUT, RockApiError } from '../../client'
+import type { CacheObject } from '../../types'
 
 let DefinedTypeId: number
 export type RockDefinitionContact = Omit<
@@ -11,16 +13,12 @@ export type RockDefinitionContact = Omit<
   cache: CacheObject['data']
 }
 
-export let allExistingRockDefinitions:
-  | { data: Array<RockDefinitionContact> }
-  | undefined
-
 export async function load(value: RockDefinitionContact): Promise<CacheObject> {
   if (DefinedTypeId === undefined) {
     const { data, error } = await GET('/api/DefinedTypes', {
       params: {
         query: {
-          $filter: `Name eq 'Connection Status'`,
+          $filter: f().eq('Name', 'Connection Status').toString(),
           $select: 'Id'
         }
       }
@@ -35,7 +33,18 @@ export async function load(value: RockDefinitionContact): Promise<CacheObject> {
   const { data, error } = await GET('/api/DefinedValues', {
     params: {
       query: {
-        $filter: `DefinedTypeId eq ${DefinedTypeId} and (ForeignKey eq '${value.ForeignKey}') or (ForeignKey eq null and Value eq '${value.Value}')`,
+        $filter: f()
+          .eq('DefinedTypeId', DefinedTypeId)
+          .and(
+            f()
+              .eq('ForeignKey', value.ForeignKey)
+              .or(
+                f()
+                  .eq('Value', value.Value.replaceAll("'", "''"))
+                  .eq('ForeignKey', null)
+              )
+          )
+          .toString(),
         $select: 'Id'
       }
     }

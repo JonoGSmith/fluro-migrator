@@ -1,4 +1,5 @@
 import createClient from 'openapi-fetch'
+
 import type { paths } from './__generated__/v1'
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

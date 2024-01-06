@@ -1,6 +1,7 @@
 import 'dotenv/config'
-import axios from 'axios'
 import fs from 'node:fs'
+
+import axios from 'axios'
 
 const client = axios.create({
   baseURL: 'https://rock.aucklandev.co.nz/api',

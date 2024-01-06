@@ -1,6 +1,6 @@
 import type { FluroDefinitionContact } from '../../../extract/definition/contact'
-import type { Cache } from '../../../load/types'
 import type { RockDefinitionContact } from '../../../load/definition/contact'
+import type { Cache } from '../../../load/types'
 
 function transformTitle(title: string): string {
   switch (title) {

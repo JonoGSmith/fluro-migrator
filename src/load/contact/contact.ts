@@ -1,4 +1,6 @@
 import { omit } from 'lodash'
+import f from 'odata-filter-builder'
+
 import type { components } from '../client'
 import { GET, POST, PUT, RockApiError } from '../client'
 import type { CacheObject } from '../types'
@@ -11,7 +13,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
   const { data, error } = await GET('/api/People', {
     params: {
       query: {
-        $filter: `ForeignKey eq '${value.ForeignKey}'`,
+        $filter: f().eq('ForeignKey', value.ForeignKey).toString(),
         $select: 'Id, PrimaryFamilyId'
       }
     }
@@ -20,9 +22,12 @@ export async function load(value: RockContact): Promise<CacheObject> {
 
   if (data != null && data.length > 0 && data[0].Id != null) {
     // person exists
-
+    let log = 'person exists'
     // add existing person to family if primary family id exists
-    if (value.PrimaryFamilyId != null) {
+    if (
+      value.PrimaryFamilyId != null &&
+      value.PrimaryFamilyId !== data[0].PrimaryFamilyId
+    ) {
       const { error } = await POST('/api/People/AddExistingPersonToFamily', {
         params: {
           query: {
@@ -34,6 +39,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
         }
       })
       if (error != null) throw new RockApiError(error)
+      log = `person exists, moving to new family ${value.PrimaryFamilyId} from ${data[0].PrimaryFamilyId}`
     }
 
     const { error } = await PUT('/api/People/{id}', {
@@ -45,7 +51,12 @@ export async function load(value: RockContact): Promise<CacheObject> {
       body: omit({ ...value, Id: data[0].Id }, ['ForeignKey', 'FamilyRole'])
     })
     if (error != null) throw new RockApiError(error)
-    return { rockId: data[0].Id }
+    return {
+      rockId: data[0].Id,
+      data: {
+        log
+      }
+    }
   } else {
     // person does not exist
 
@@ -66,14 +77,24 @@ export async function load(value: RockContact): Promise<CacheObject> {
         }
       )
       if (error != null) throw new RockApiError(error)
-      return { rockId: data as unknown as number }
+      return {
+        rockId: data as unknown as number,
+        data: {
+          log: `person does not exist, add new person to family ${value.PrimaryFamilyId}`
+        }
+      }
     } else {
       // create new person if primary family id does not exist
       const { data, error } = await POST('/api/People', {
         body: omit(value, ['FamilyRole'])
       })
       if (error != null) throw new RockApiError(error)
-      return { rockId: data as unknown as number }
+      return {
+        rockId: data as unknown as number,
+        data: {
+          log: 'person does not exist, create new person with new family'
+        }
+      }
     }
   }
 }

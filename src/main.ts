@@ -1,12 +1,14 @@
 import 'dotenv/config'
-import { tuples } from './tuples'
-import type { Cache, CacheObject } from './load/types'
 import fs from 'fs'
 import fsPromise from 'node:fs/promises'
 import path from 'path'
-import { SingleBar } from 'cli-progress'
+
 import colors from 'ansi-colors'
+import { SingleBar } from 'cli-progress'
 import { parse } from 'ts-command-line-args'
+
+import type { Cache, CacheObject } from './load/types'
+import { tuples } from './tuples'
 
 interface CommandLineArguments {
   exclude?: string[]
