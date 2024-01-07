@@ -50,7 +50,9 @@ export async function load(value: RockContact): Promise<CacheObject> {
       },
       body: omit({ ...value, Id: data[0].Id }, ['FamilyRole'])
     })
-    if (error != null) throw new RockApiError(error)
+    if (error != null) {
+      throw new RockApiError(error)
+    }
     return {
       rockId: data[0].Id,
       data: {
@@ -76,7 +78,9 @@ export async function load(value: RockContact): Promise<CacheObject> {
           body: omit(value, ['FamilyRole'])
         }
       )
-      if (error != null) throw new RockApiError(error)
+      if (error != null) {
+        throw new RockApiError(error)
+      }
       return {
         rockId: data as unknown as number,
         data: {
@@ -88,7 +92,9 @@ export async function load(value: RockContact): Promise<CacheObject> {
       const { data, error } = await POST('/api/People', {
         body: omit(value, ['FamilyRole'])
       })
-      if (error != null) throw new RockApiError(error)
+      if (error != null) {
+        throw new RockApiError(error)
+      }
       return {
         rockId: data as unknown as number,
         data: {

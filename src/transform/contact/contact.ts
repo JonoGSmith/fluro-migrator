@@ -1,4 +1,4 @@
-import { find } from 'lodash'
+import { find, truncate } from 'lodash'
 
 import type { FluroContact } from '../../extract/contact'
 import type { RockContact } from '../../load/contact'
@@ -20,10 +20,18 @@ function transformGender(gender: string): 'Unknown' | 'Male' | 'Female' {
  * transforms a fluro api contact object to a rock contact object
  */
 export function transform(cache: Cache, value: FluroContact): RockContact {
-  const ConnectionStatusValueId = find(
-    cache['definition/contact'],
-    (val) => val.data?.definitionName === value.definition
-  )?.rockId
+  const ConnectionStatusValueId = find(cache['definition/contact'], (val) => {
+    if (value.definition == null || value.definition === '') {
+      return val.data?.definitionName === 'visitor'
+    } else {
+      return val.data?.definitionName === value.definition
+    }
+  })?.rockId
+
+  if (ConnectionStatusValueId == null)
+    throw new Error(
+      `Couldn't find connection status value id for contact ${value._id} with definition ${value.definition}`
+    )
 
   return {
     IsSystem: false,
@@ -32,7 +40,7 @@ export function transform(cache: Cache, value: FluroContact): RockContact {
     IsDeceased: value.deceased,
     DeceasedDate: value.deceasedDate,
     Email: value?.emails?.[0],
-    FirstName: value.firstName,
+    FirstName: truncate(value.firstName, { length: 50 }),
     LastName: value.lastName,
     ForeignKey: value._id,
     Gender: transformGender(value.gender),
