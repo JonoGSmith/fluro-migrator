@@ -11,7 +11,8 @@ describe('contact', () => {
       firstName: 'John',
       lastName: 'Smith',
       gender: 'male',
-      emails: { 0: 'example@example.com' }
+      emails: { 0: 'example@example.com' },
+      definition: 'visitor'
     } as unknown as FluroContact
     const rockContact: RockContact = {
       BirthMonth: undefined,
@@ -25,11 +26,20 @@ describe('contact', () => {
       IsDeceased: undefined,
       IsSystem: false,
       LastName: 'Smith',
-      PrimaryFamilyId: undefined
+      PrimaryFamilyId: undefined,
+      ConnectionStatusValueId: 1
     } as RockContact
     it('should translate a fluro api contact to a rock contact', () => {
-      const cache: Cache = {}
-      cache['contact'] = {}
+      const cache: Cache = {
+        'definition/contact': {
+          fluroId: {
+            data: {
+              definitionName: 'visitor'
+            },
+            rockId: 1
+          }
+        }
+      }
       expect(transform(cache, fluroContact)).toEqual(rockContact)
     })
   })
