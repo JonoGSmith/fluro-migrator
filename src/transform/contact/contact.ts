@@ -35,8 +35,10 @@ export function transform(cache: Cache, value: FluroContact): RockContact {
 
   return {
     IsSystem: false,
+    BirthDay: value?.dobDay,
     BirthMonth: value.dobMonth,
     BirthYear: value.dobYear,
+    BirthDate: value?.dob,
     IsDeceased: value.deceased,
     DeceasedDate: value.deceasedDate,
     Email: value?.emails?.[0],
