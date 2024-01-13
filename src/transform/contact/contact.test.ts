@@ -17,6 +17,9 @@ describe('contact', () => {
     const rockContact: RockContact = {
       BirthMonth: undefined,
       BirthYear: undefined,
+      BirthDate: undefined,
+      BirthDay: undefined,
+      PhoneNumbers: [],
       DeceasedDate: undefined,
       Email: 'example@example.com',
       FirstName: 'John',

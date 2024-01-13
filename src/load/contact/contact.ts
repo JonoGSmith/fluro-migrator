@@ -48,7 +48,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole'])
+      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole', 'PhoneNumbers'])
     })
     if (error != null) {
       throw new RockApiError(error)
@@ -75,7 +75,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
               groupRoleId: value.FamilyRole ?? 3
             }
           },
-          body: omit(value, ['FamilyRole'])
+          body: omit(value, ['FamilyRole', 'PhoneNumbers'])
         }
       )
       if (error != null) {
@@ -90,7 +90,7 @@ export async function load(value: RockContact): Promise<CacheObject> {
     } else {
       // create new person if primary family id does not exist
       const { data, error } = await POST('/api/People', {
-        body: omit(value, ['FamilyRole'])
+        body: omit(value, ['FamilyRole', 'PhoneNumbers'])
       })
       if (error != null) {
         throw new RockApiError(error)

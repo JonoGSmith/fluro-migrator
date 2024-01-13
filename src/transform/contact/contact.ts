@@ -52,6 +52,7 @@ export function transform(cache: Cache, value: FluroContact): RockContact {
         ? cache['family'][value.family._id]?.rockId
         : undefined,
     FamilyRole:
-      value?.householdRole != null && value.householdRole === 'child' ? 4 : 3
+      value?.householdRole != null && value.householdRole === 'child' ? 4 : 3,
+    PhoneNumbers: []
   }
 }
