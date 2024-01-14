@@ -9,7 +9,7 @@ export async function load(
   personId: number,
   fluroId: string
 ): Promise<void> {
-  // get number type value id
+  // get number type value id - add number in as "mobile" by default
   if (NumberTypeValueId === undefined) {
     const { data, error } = await GET('/api/DefinedValues', {
       params: {
