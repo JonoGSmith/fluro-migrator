@@ -12,14 +12,15 @@ describe('contact', () => {
       lastName: 'Smith',
       gender: 'male',
       emails: { 0: 'example@example.com' },
-      definition: 'visitor'
+      definition: 'visitor',
+      phoneNumbers: []
     } as unknown as FluroContact
     const rockContact: RockContact = {
       BirthMonth: undefined,
       BirthYear: undefined,
       BirthDate: undefined,
       BirthDay: undefined,
-      PhoneNumbers: [],
+      PhoneNumber: [],
       DeceasedDate: undefined,
       Email: 'example@example.com',
       FirstName: 'John',

@@ -5,8 +5,11 @@ import type { components } from '../client'
 import { GET, POST, PUT, RockApiError } from '../client'
 import type { CacheObject } from '../types'
 
+import { load as loadNumber } from './phoneNumber/phoneNumber'
+
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
   FamilyRole: number
+  PhoneNumber: string[]
 }
 
 export async function load(value: RockContact): Promise<CacheObject> {
@@ -48,11 +51,19 @@ export async function load(value: RockContact): Promise<CacheObject> {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole', 'PhoneNumbers'])
+      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole', 'PhoneNumber'])
     })
     if (error != null) {
       throw new RockApiError(error)
     }
+    if (value.PhoneNumber.length > 0)
+      await loadNumber(
+        value.PhoneNumber[0],
+        data[0].Id,
+        // ForeignKey will never be undefined
+        value.ForeignKey as string
+      )
+
     return {
       rockId: data[0].Id,
       data: {
@@ -75,12 +86,19 @@ export async function load(value: RockContact): Promise<CacheObject> {
               groupRoleId: value.FamilyRole ?? 3
             }
           },
-          body: omit(value, ['FamilyRole', 'PhoneNumbers'])
+          body: omit(value, ['FamilyRole', 'PhoneNumber'])
         }
       )
       if (error != null) {
         throw new RockApiError(error)
       }
+      if (value.PhoneNumber.length > 0)
+        await loadNumber(
+          value.PhoneNumber[0],
+          data as unknown as number,
+          // ForeignKey will never be undefined
+          value.ForeignKey as string
+        )
       return {
         rockId: data as unknown as number,
         data: {
@@ -90,11 +108,18 @@ export async function load(value: RockContact): Promise<CacheObject> {
     } else {
       // create new person if primary family id does not exist
       const { data, error } = await POST('/api/People', {
-        body: omit(value, ['FamilyRole', 'PhoneNumbers'])
+        body: omit(value, ['FamilyRole', 'PhoneNumber'])
       })
       if (error != null) {
         throw new RockApiError(error)
       }
+      if (value.PhoneNumber.length > 0)
+        await loadNumber(
+          value.PhoneNumber[0],
+          data as unknown as number,
+          // ForeignKey will never be undefined
+          value.ForeignKey as string
+        )
       return {
         rockId: data as unknown as number,
         data: {
