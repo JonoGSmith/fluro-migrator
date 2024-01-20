@@ -30,14 +30,14 @@ export async function load(
   const { data: phoneNumbers, error } = await GET('/api/PhoneNumbers', {
     params: {
       query: {
-        $filter: f().eq('Description', 'Mobile/Cell phone number').toString(),
+        $filter: f().eq('Number', `${phoneNumber}`).toString(),
         $select: 'Id'
       }
     }
   })
   if (error != null) throw new RockApiError(error)
 
-  if (phoneNumbers == null || phoneNumbers?.length > 0) {
+  if (phoneNumbers == null || phoneNumbers?.length === 0) {
     const { error } = await POST('/api/PhoneNumbers', {
       body: {
         PersonId: personId,
