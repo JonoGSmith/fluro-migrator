@@ -37,6 +37,7 @@ export async function load(
   })
   if (error != null) throw new RockApiError(error)
 
+  //if it doesnt exist then add the number
   if (phoneNumbers == null || phoneNumbers?.length === 0) {
     const { error } = await POST('/api/PhoneNumbers', {
       body: {
