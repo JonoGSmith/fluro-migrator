@@ -6,10 +6,12 @@ import { GET, POST, PUT, RockApiError } from '../client'
 import type { CacheObject } from '../types'
 
 import { load as loadNumber } from './phoneNumber/phoneNumber'
+import { getRecordStatus } from './recordStatus/recordStatus'
 
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
   FamilyRole: number
   PhoneNumber: string[]
+  FluroRecordStatus: string
 }
 
 export async function load(value: RockContact): Promise<CacheObject> {
@@ -45,13 +47,21 @@ export async function load(value: RockContact): Promise<CacheObject> {
       log = `person exists, moving to new family ${value.PrimaryFamilyId} from ${data[0].PrimaryFamilyId}`
     }
 
+    // finally - update the contact
     const { error } = await PUT('/api/People/{id}', {
       params: {
         path: {
           id: data[0].Id
         }
       },
-      body: omit({ ...value, Id: data[0].Id }, ['FamilyRole', 'PhoneNumber'])
+      body: omit(
+        {
+          ...value,
+          Id: data[0].Id,
+          RecordStatusValueId: await getRecordStatus(value.FluroRecordStatus)
+        },
+        ['FamilyRole', 'PhoneNumber', 'FluroRecordStatus']
+      )
     })
     if (error != null) {
       throw new RockApiError(error)
@@ -86,7 +96,15 @@ export async function load(value: RockContact): Promise<CacheObject> {
               groupRoleId: value.FamilyRole ?? 3
             }
           },
-          body: omit(value, ['FamilyRole', 'PhoneNumber'])
+          body: omit(
+            {
+              ...value,
+              RecordStatusValueId: await getRecordStatus(
+                value.FluroRecordStatus
+              )
+            },
+            ['FamilyRole', 'PhoneNumber', 'FluroRecordStatus']
+          )
         }
       )
       if (error != null) {
@@ -108,7 +126,13 @@ export async function load(value: RockContact): Promise<CacheObject> {
     } else {
       // create new person if primary family id does not exist
       const { data, error } = await POST('/api/People', {
-        body: omit(value, ['FamilyRole', 'PhoneNumber'])
+        body: omit(
+          {
+            ...value,
+            RecordStatusValueId: await getRecordStatus(value.FluroRecordStatus)
+          },
+          ['FamilyRole', 'PhoneNumber', 'FluroRecordStatus']
+        )
       })
       if (error != null) {
         throw new RockApiError(error)
