@@ -5,8 +5,8 @@ import type { components } from '../client'
 import { GET, POST, PUT, RockApiError } from '../client'
 import type { CacheObject } from '../types'
 
-import { load as loadNumber } from './phoneNumber/phoneNumber'
-import { getRecordStatus } from './recordStatus/recordStatus'
+import { load as loadNumber } from './phoneNumber'
+import { getRecordStatus } from './recordStatus'
 
 export type RockContact = components['schemas']['Rock.Model.Person'] & {
   FamilyRole: number
