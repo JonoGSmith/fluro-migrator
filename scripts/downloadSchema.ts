@@ -13,6 +13,7 @@ async function downloadSchema(): Promise<void> {
   const REST_CONTROLLER_NAMES = [
     'Groups',
     'GroupTypes',
+    'GroupTypeRoles',
     'People',
     'DefinedTypes',
     'DefinedValues',
