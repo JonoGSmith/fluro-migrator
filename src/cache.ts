@@ -22,7 +22,7 @@ export async function loadCache(): Promise<Cache> {
       if (stat.isDirectory()) {
         filelist = await walk(base, filepath, filelist)
       } else {
-        filelist.push(filepath.replace(`${base}/`, '').replace('.json', ''))
+        filelist.push(filepath.replace(`${base}${path.sep}`, '').replace('.json', ''))
       }
     }
 
@@ -48,8 +48,8 @@ export async function loadCache(): Promise<Cache> {
 }
 
 export async function saveCache(name: string, contents: string): Promise<void> {
-  if (name.includes('/')) {
-    const pathWithoutFile = name.split('/')
+  if (name.includes(path.sep)) {
+    const pathWithoutFile = name.split(path.sep)
     pathWithoutFile.pop()
     const dir = path.join(__dirname, '..', 'tmp', 'cache', ...pathWithoutFile)
 
