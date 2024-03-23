@@ -3,5 +3,9 @@
     { "path": "src/extract", "color": "blue" },
     { "path": "src/load", "color": "magenta" },
     { "path": "src/transform", "color": "cyan" }
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "debug.javascript.autoAttachFilter": "smart",
+  "editor.tabSize": 2
 }
